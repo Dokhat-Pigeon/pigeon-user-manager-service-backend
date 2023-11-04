@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "User", description = "API для управления информацией о юзерах")
+@Tag(name = "User", description = "API для управления информацией о пользователях")
 @RestController
 @RequestMapping("/v1/user")
 public class UserController {

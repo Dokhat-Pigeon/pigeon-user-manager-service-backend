@@ -16,7 +16,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenApi() {
         return new OpenAPI()
-                .info(new Info().title("SCT Service").version("1.0.0"))
+                .info(new Info().title("Pigeon User Manager Service").version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList(BEARER_SCHEME_NAME))
                 .components(this.getComponents());
     }
