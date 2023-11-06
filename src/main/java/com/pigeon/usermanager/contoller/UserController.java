@@ -1,20 +1,59 @@
 package com.pigeon.usermanager.contoller;
 
+import com.pigeon.usermanager.model.dto.AuthorizationDto;
+import com.pigeon.usermanager.model.dto.RegistrationDto;
+import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "User", description = "API для управления информацией о пользователях")
+import javax.validation.Valid;
+import java.util.UUID;
+
+@Tag(name = "User", description = "API для управления состоянием пользователей")
 @RestController
 @RequestMapping("/v1/user")
+@RequiredArgsConstructor
+@Slf4j
 public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping("/registration")
+    @Operation(description = "Регистрация пользователя")
+    public ResponseEntity<Void> register(@RequestBody @Valid RegistrationDto registrationDto) {
+        userService.register(registrationDto);
+        log.info("User with login {} was registered.", registrationDto.getLogin());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/verification/{uuid}")
+    @Operation(description = "Проверка подтверждения почты")
+    public ResponseEntity<TokenDto> verify(
+            @PathVariable @Parameter(description = "Идентификатор записи о подтверждения почты") UUID uuid
+    ) {
+        TokenDto tokenDto = userService.verify(uuid);
+        log.info("Record with uuid {} was verified.", uuid);
+        return ResponseEntity.ok(tokenDto);
+    }
+
+    @PostMapping("/authorization")
+    @Operation(description = "Авторизация пользователя")
+    public ResponseEntity<TokenDto> login(@RequestBody @Valid AuthorizationDto authorizationDto) {
+        TokenDto tokenDto = userService.login(authorizationDto);
+        log.info("User {} was authorized.", authorizationDto.getLoginOrEmail());
+        return ResponseEntity.ok(tokenDto);
+    }
 
     @GetMapping("/logout")
     @Operation(description = "Позволяет выйти пользователю из активной сессии")
     public ResponseEntity<Void> logout() {
+        userService.logout();
         return ResponseEntity.ok().build();
     }
 }
