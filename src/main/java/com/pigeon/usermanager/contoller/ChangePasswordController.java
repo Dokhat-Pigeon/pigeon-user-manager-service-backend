@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
 
-@Tag(name = "Change Password", description = "API для смены пароля неавторизованного пользователя")
 @RestController
-@RequiredArgsConstructor
-@Slf4j
-@Validated
 @RequestMapping("/v1/change-password")
+@RequiredArgsConstructor
+@Validated
+@Slf4j
+@Tag(name = "Change Password", description = "API для смены пароля неавторизованного пользователя")
 public class ChangePasswordController {
 
     private final ChangePasswordService changePasswordService;
@@ -32,22 +32,22 @@ public class ChangePasswordController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/verify/{uid}")
+    @GetMapping("/verify/{uuid}")
     @Operation(description = "Проверка возможности смены пароля")
     public ResponseEntity<Void> verify(
-            @PathVariable @Parameter(description = "Идентификатор пользователя") String uid
+            @PathVariable @Parameter(description = "Идентификатор смены пароля") String uuid
     ) {
-        changePasswordService.verify(uid);
+        changePasswordService.verify(uuid);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/confirm/{uid}")
+    @PutMapping("/confirm/{uuid}")
     @Operation(description = "Подтверждение смены пароля")
     public ResponseEntity<Void> confirm(
-            @PathVariable @Parameter(description = "Идентификатор пользователя") String uid
+            @PathVariable @Parameter(description = "Идентификатор смены пароля") String uuid
     ) {
-        changePasswordService.confirm(uid);
-        log.info("Password was changed for user with uid: {}", uid);
+        changePasswordService.confirm(uuid);
+        log.info("Password was changed for record with uuid: {}", uuid);
         return ResponseEntity.ok().build();
     }
 }

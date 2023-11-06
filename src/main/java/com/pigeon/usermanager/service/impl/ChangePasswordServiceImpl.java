@@ -14,12 +14,12 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
     }
 
     @Override
-    public void verify(String uid) {
+    public void verify(String uuid) {
         // TODO
     }
 
     @Override
-    public void confirm(String uid) {
+    public void confirm(String uuid) {
         // TODO
     }
 }

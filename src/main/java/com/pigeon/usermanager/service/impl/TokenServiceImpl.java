@@ -17,7 +17,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public TokenDto getRefreshToken(RefreshTokenDto refreshTokenDto) {
+    public TokenDto updateAuthToken(RefreshTokenDto refreshTokenDto) {
         // TODO
         return TokenDto.builder().build();
     }

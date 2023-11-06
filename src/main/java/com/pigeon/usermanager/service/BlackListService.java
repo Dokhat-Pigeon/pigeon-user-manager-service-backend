@@ -1,18 +1,21 @@
 package com.pigeon.usermanager.service;
 
+/**
+ * Service for working with a blacklist
+ */
 public interface BlackListService {
 
     /**
      * Add user to blacklist
      *
-     * @param uid User unique identifier
+     * @param id User identifier
      */
-    void add(String uid);
+    void addUser(Long id);
 
     /**
      * Delete user from blacklist
      *
-     * @param uid User unique identifier
+     * @param id User identifier
      */
-    void delete(String uid);
+    void deleteUser(Long id);
 }

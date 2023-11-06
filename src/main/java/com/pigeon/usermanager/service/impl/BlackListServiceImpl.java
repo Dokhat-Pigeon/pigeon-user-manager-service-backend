@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BlackListServiceImpl implements BlackListService {
+
     @Override
-    public void add(String uid) {
+    public void addUser(Long id) {
         // TODO
     }
 
     @Override
-    public void delete(String uid) {
+    public void deleteUser(Long id) {
         // TODO
     }
 }

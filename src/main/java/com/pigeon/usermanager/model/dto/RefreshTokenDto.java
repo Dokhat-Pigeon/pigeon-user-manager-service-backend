@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
-@Schema(description = "Модель для refresh токена")
+@Schema(description = "Модель для передачи refresh токена")
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor

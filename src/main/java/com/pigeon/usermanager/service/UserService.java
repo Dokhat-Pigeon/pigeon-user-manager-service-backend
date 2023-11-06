@@ -4,6 +4,9 @@ import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 
+/**
+ * User management service
+ */
 public interface UserService {
 
     /**
@@ -16,10 +19,10 @@ public interface UserService {
     /**
      * User verification
      *
-     * @param uid User unique identifier
+     * @param uuid Email verification record uuid
      * @return {@link TokenDto}
      */
-    TokenDto verify(String uid);
+    TokenDto verify(String uuid);
 
     /**
      * User authorization
@@ -28,4 +31,9 @@ public interface UserService {
      * @return {@link TokenDto}
      */
     TokenDto login(AuthorizationDto authorizationDto);
+
+    /**
+     * User logout
+     */
+    void logout();
 }

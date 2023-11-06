@@ -10,26 +10,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Token", description = "API для получения и обновления токенов аунтефикации")
 @RestController
+@RequestMapping("/v1/token")
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/v1/token")
+@Tag(name = "Token", description = "API для получения и обновления токенов аунтентификации")
 public class TokenController {
 
     private final TokenService tokenService;
 
-    @GetMapping()
+    @GetMapping
     @Operation(description = "Получение токена авторизации")
     public ResponseEntity<TokenDto> getAuthToken() {
         TokenDto tokenDto = tokenService.getAuthToken();
         return ResponseEntity.ok(tokenDto);
     }
 
-    @PostMapping()
-    @Operation(description = "Получение refresh токена")
-    public ResponseEntity<TokenDto> getRefreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
-        TokenDto tokenDto = tokenService.getRefreshToken(refreshTokenDto);
+    @PostMapping
+    @Operation(description = "Получение обновленного JWT")
+    public ResponseEntity<TokenDto> getRefreshToken(@RequestBody RefreshTokenDto refresh) {
+        TokenDto tokenDto = tokenService.updateAuthToken(refresh);
         return ResponseEntity.ok(tokenDto);
     }
 }

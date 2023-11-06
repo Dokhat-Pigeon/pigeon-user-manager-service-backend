@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto verify(String uid) {
+    public TokenDto verify(String uuid) {
         // TODO
         return TokenDto.builder().build();
     }
@@ -26,5 +26,10 @@ public class UserServiceImpl implements UserService {
     public TokenDto login(AuthorizationDto authorizationDto) {
         // TODO
         return TokenDto.builder().build();
+    }
+
+    @Override
+    public void logout() {
+        // TODO
     }
 }

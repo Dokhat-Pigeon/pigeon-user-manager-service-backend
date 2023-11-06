@@ -10,31 +10,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Black List", description = "API для работы с черным списком пользователей")
+import javax.validation.constraints.Positive;
+
 @RestController
-@RequiredArgsConstructor
-@Slf4j
-@Validated
 @RequestMapping("/v1/blacklist")
+@RequiredArgsConstructor
+@Validated
+@Slf4j
+@Tag(name = "Black List", description = "API для работы с черным списком пользователей")
 public class BlackListController {
 
     private final BlackListService blackListService;
 
-    @PostMapping("/{uid}")
+    @PostMapping("/{id}")
     @Operation(description = "Добавить пользователя в черный список")
     public ResponseEntity<Void> add(
-            @PathVariable @Parameter(description = "Идентификатор пользователя") String uid
+            @PathVariable @Positive @Parameter(description = "Идентификатор пользователя") Long id
     ) {
-        blackListService.add(uid);
+        blackListService.addUser(id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{uid}")
+    @DeleteMapping("/{id}")
     @Operation(description = "Удалить пользователя из черного списка")
     public ResponseEntity<Void> delete(
-            @PathVariable @Parameter(description = "Идентификатор пользователя") String uid
+            @PathVariable @Positive @Parameter(description = "Идентификатор пользователя") Long id
     ) {
-        blackListService.delete(uid);
+        blackListService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 }

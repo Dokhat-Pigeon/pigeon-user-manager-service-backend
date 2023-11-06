@@ -12,36 +12,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "User", description = "API для управления состоянием пользователей")
+import javax.validation.Valid;
+
 @RestController
+@RequestMapping("/v1/user")
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/v1/user")
+@Tag(name = "User", description = "API для управления состоянием пользователей")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/registration")
     @Operation(description = "Регистрация пользователя")
-    public ResponseEntity<Void> register(@RequestBody RegistrationDto registrationDto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegistrationDto registrationDto) {
         userService.register(registrationDto);
         log.info("User with login {} was registered.", registrationDto.getLogin());
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/verification/{uid}")
+    @PutMapping("/verification/{uuid}")
     @Operation(description = "Проверка подтверждения почты")
-    public ResponseEntity<TokenDto> verification(
-            @PathVariable @Parameter(description = "Идентификатор пользователя") String uid
+    public ResponseEntity<TokenDto> verify(
+            @PathVariable @Parameter(description = "Идентификатор записи о подтверждения почты") String uuid
     ) {
-        TokenDto tokenDto = userService.verify(uid);
-        log.info("User with uid {} was verified.", uid);
+        TokenDto tokenDto = userService.verify(uuid);
+        log.info("Record with uuid {} was verified.", uuid);
         return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping("/authorization")
     @Operation(description = "Авторизация пользователя")
-    public ResponseEntity<TokenDto> login(@RequestBody AuthorizationDto authorizationDto) {
+    public ResponseEntity<TokenDto> login(@RequestBody @Valid AuthorizationDto authorizationDto) {
         TokenDto tokenDto = userService.login(authorizationDto);
         log.info("User {} was authorized.", authorizationDto.getLoginOrEmail());
         return ResponseEntity.ok(tokenDto);
@@ -50,6 +52,7 @@ public class UserController {
     @GetMapping("/logout")
     @Operation(description = "Позволяет выйти пользователю из активной сессии")
     public ResponseEntity<Void> logout() {
+        userService.logout();
         return ResponseEntity.ok().build();
     }
 }
