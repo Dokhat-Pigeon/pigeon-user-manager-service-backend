@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Token", description = "API для получения и обновления токенов аунтентификации")
 @RestController
 @RequestMapping("/v1/token")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Token", description = "API для получения и обновления токенов аунтентификации")
 public class TokenController {
 
     private final TokenService tokenService;

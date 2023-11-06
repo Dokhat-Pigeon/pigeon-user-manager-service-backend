@@ -7,6 +7,8 @@ import com.pigeon.usermanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto verify(String uuid) {
+    public TokenDto verify(UUID uuid) {
         // TODO
         return TokenDto.builder().build();
     }

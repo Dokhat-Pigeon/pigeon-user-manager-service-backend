@@ -11,13 +11,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
+import java.util.UUID;
 
+@Tag(name = "Change Password", description = "API для смены пароля неавторизованного пользователя")
 @RestController
 @RequestMapping("/v1/change-password")
-@RequiredArgsConstructor
 @Validated
+@RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Change Password", description = "API для смены пароля неавторизованного пользователя")
 public class ChangePasswordController {
 
     private final ChangePasswordService changePasswordService;
@@ -35,7 +36,7 @@ public class ChangePasswordController {
     @GetMapping("/verify/{uuid}")
     @Operation(description = "Проверка возможности смены пароля")
     public ResponseEntity<Void> verify(
-            @PathVariable @Parameter(description = "Идентификатор смены пароля") String uuid
+            @PathVariable @Parameter(description = "Идентификатор смены пароля") UUID uuid
     ) {
         changePasswordService.verify(uuid);
         return ResponseEntity.ok().build();
@@ -44,7 +45,7 @@ public class ChangePasswordController {
     @PutMapping("/confirm/{uuid}")
     @Operation(description = "Подтверждение смены пароля")
     public ResponseEntity<Void> confirm(
-            @PathVariable @Parameter(description = "Идентификатор смены пароля") String uuid
+            @PathVariable @Parameter(description = "Идентификатор смены пароля") UUID uuid
     ) {
         changePasswordService.confirm(uuid);
         log.info("Password was changed for record with uuid: {}", uuid);

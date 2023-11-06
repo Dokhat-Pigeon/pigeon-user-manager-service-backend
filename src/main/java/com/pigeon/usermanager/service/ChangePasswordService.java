@@ -1,5 +1,7 @@
 package com.pigeon.usermanager.service;
 
+import java.util.UUID;
+
 /**
  * Service for changing the password of an unauthorized user
  */
@@ -17,12 +19,12 @@ public interface ChangePasswordService {
      *
      * @param uuid Change password record uuid
      */
-    void verify(String uuid);
+    void verify(UUID uuid);
 
     /**
      * Confirmation of changing the password
      *
      * @param uuid Change password record uuid
      */
-    void confirm(String uuid);
+    void confirm(UUID uuid);
 }

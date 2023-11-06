@@ -4,6 +4,8 @@ import com.pigeon.usermanager.service.ChangePasswordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ChangePasswordServiceImpl implements ChangePasswordService {
@@ -14,12 +16,12 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
     }
 
     @Override
-    public void verify(String uuid) {
+    public void verify(UUID uuid) {
         // TODO
     }
 
     @Override
-    public void confirm(String uuid) {
+    public void confirm(UUID uuid) {
         // TODO
     }
 }

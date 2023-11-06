@@ -13,12 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
+@Tag(name = "User", description = "API для управления состоянием пользователей")
 @RestController
 @RequestMapping("/v1/user")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "User", description = "API для управления состоянием пользователей")
 public class UserController {
 
     private final UserService userService;
@@ -34,7 +35,7 @@ public class UserController {
     @PutMapping("/verification/{uuid}")
     @Operation(description = "Проверка подтверждения почты")
     public ResponseEntity<TokenDto> verify(
-            @PathVariable @Parameter(description = "Идентификатор записи о подтверждения почты") String uuid
+            @PathVariable @Parameter(description = "Идентификатор записи о подтверждения почты") UUID uuid
     ) {
         TokenDto tokenDto = userService.verify(uuid);
         log.info("Record with uuid {} was verified.", uuid);

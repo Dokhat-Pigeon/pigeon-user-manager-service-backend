@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
 
+@Tag(name = "Black List", description = "API для работы с черным списком пользователей")
 @RestController
 @RequestMapping("/v1/blacklist")
-@RequiredArgsConstructor
 @Validated
+@RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Black List", description = "API для работы с черным списком пользователей")
 public class BlackListController {
 
     private final BlackListService blackListService;
