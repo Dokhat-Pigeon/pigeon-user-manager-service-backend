@@ -3,6 +3,7 @@
 --changeset dmitry.krivenko:202311051800-1
 CREATE TABLE IF NOT EXISTS public.user(
     id              BIGINT          NOT NULL,
+    name            VARCHAR         NOT NULL,
     email           VARCHAR         NOT NULL,
     login           VARCHAR         NOT NULL,
     password        VARCHAR         NOT NULL,
@@ -20,6 +21,7 @@ CREATE SEQUENCE hibernate_user_sequence;
 
 COMMENT ON TABLE  public.user                           IS 'Аккаунты пользователей';
 COMMENT ON COLUMN public.user.id                        IS 'ID пользователя';
+COMMENT ON COLUMN public.user.name                      IS 'Имя пользователя';
 COMMENT ON COLUMN public.user.email                     IS 'Почта пользователя';
 COMMENT ON COLUMN public.user.login                     IS 'Логин пользователя';
 COMMENT ON COLUMN public.user.password                  IS 'Пароль пользователя';
@@ -47,9 +49,3 @@ COMMENT ON COLUMN public.blacklist.id                       IS 'ID черног�
 COMMENT ON COLUMN public.blacklist.owner_id                 IS 'ID владельца черного списка';
 COMMENT ON COLUMN public.blacklist.user_id                  IS 'ID пользователя в черном списке';
 COMMENT ON COLUMN public.blacklist.created_date             IS 'Время создания записи';
-
---changeset Nikita Syuremov:202311051800-3
-ALTER TABLE public.user
-ADD COLUMN name VARCHAR;
-
-COMMENT ON COLUMN public.user.name IS 'Имя пользователя';
