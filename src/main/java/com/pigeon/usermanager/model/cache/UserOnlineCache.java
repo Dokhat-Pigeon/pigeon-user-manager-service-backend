@@ -1,30 +1,24 @@
 package com.pigeon.usermanager.model.cache;
 
-import com.pigeon.usermanager.model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.io.Serializable;
+import java.time.ZonedDateTime;
 
-@RedisHash(value = "user")
+@RedisHash(value = "user_online")
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCache implements Serializable {
+public class UserOnlineCache {
 
     @Id
     private Long id;
 
-    private String email;
-
-    private String login;
-
-    private String name;
-
-    private UserStatus status;
+    private ZonedDateTime createdDate;
 }

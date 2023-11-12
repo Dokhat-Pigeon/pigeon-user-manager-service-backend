@@ -1,6 +1,5 @@
 package com.pigeon.usermanager.model.cache;
 
-import com.pigeon.usermanager.model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,23 +7,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.io.Serializable;
+import java.util.UUID;
 
-@RedisHash(value = "user")
+@RedisHash(value = "change_password")
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCache implements Serializable {
+public class ChangePasswordCache {
 
     @Id
-    private Long id;
+    private UUID recordId;
 
-    private String email;
-
-    private String login;
-
-    private String name;
-
-    private UserStatus status;
+    private Long userId;
 }
