@@ -47,3 +47,9 @@ COMMENT ON COLUMN public.blacklist.id                       IS 'ID черног�
 COMMENT ON COLUMN public.blacklist.owner_id                 IS 'ID владельца черного списка';
 COMMENT ON COLUMN public.blacklist.user_id                  IS 'ID пользователя в черном списке';
 COMMENT ON COLUMN public.blacklist.created_date             IS 'Время создания записи';
+
+--changeset Nikita Syuremov:202311051800-3
+ALTER TABLE public.user
+ADD COLUMN name VARCHAR;
+
+COMMENT ON COLUMN public.user.name IS 'Имя пользователя';
