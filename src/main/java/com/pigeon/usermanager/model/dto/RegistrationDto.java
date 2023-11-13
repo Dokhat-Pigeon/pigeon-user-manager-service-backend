@@ -17,7 +17,7 @@ public class RegistrationDto {
 
     @NotBlank
     @Schema(description = "Почта")
-    private String mail;
+    private String email;
 
     @NotBlank
     @Schema(description = "Логин")

@@ -14,9 +14,9 @@ public interface UserService {
     /**
      * User registration
      *
-     * @param registrationDto Registration form data
+     * @param registration Registration form data
      */
-    void register(RegistrationDto registrationDto);
+    void register(RegistrationDto registration);
 
     /**
      * User verification
