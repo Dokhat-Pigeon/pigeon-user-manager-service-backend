@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RedisHash(value = "registration")
 @Builder(toBuilder = true)
@@ -31,4 +33,7 @@ public class RegistrationCache {
     private String password;
 
     private UserStatus status;
+
+    @TimeToLive(unit = TimeUnit.MINUTES)
+    private Long timeToLive;
 }

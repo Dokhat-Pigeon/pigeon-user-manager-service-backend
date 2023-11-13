@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -20,5 +19,5 @@ public class UserOnlineCache {
     @Id
     private Long id;
 
-    private ZonedDateTime createdDate;
+    private ZonedDateTime lastOnlineDate;
 }
