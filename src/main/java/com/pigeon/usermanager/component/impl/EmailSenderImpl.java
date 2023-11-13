@@ -3,6 +3,7 @@ package com.pigeon.usermanager.component.impl;
 import com.pigeon.usermanager.component.EmailSender;
 import com.pigeon.usermanager.model.context.EmailContext;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,7 +24,8 @@ public class EmailSenderImpl implements EmailSender {
     private final SpringTemplateEngine templateEngine;
 
     @Override
-    public void sendMail(EmailContext email) throws MessagingException {
+    @SneakyThrows(MessagingException.class)
+    public void sendMail(EmailContext email) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(
                 message,

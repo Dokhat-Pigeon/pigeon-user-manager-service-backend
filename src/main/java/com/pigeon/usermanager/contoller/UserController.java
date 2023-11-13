@@ -26,9 +26,9 @@ public class UserController {
 
     @PostMapping("/registration")
     @Operation(description = "Регистрация пользователя")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegistrationDto registrationDto) {
-        userService.register(registrationDto);
-        log.info("User with login {} was registered.", registrationDto.getLogin());
+    public ResponseEntity<Void> register(@RequestBody @Valid RegistrationDto registration) {
+        userService.register(registration);
+        log.info("User with login {} was registered.", registration.getLogin());
         return ResponseEntity.ok().build();
     }
 
@@ -44,9 +44,9 @@ public class UserController {
 
     @PostMapping("/authorization")
     @Operation(description = "Авторизация пользователя")
-    public ResponseEntity<TokenDto> login(@RequestBody @Valid AuthorizationDto authorizationDto) {
-        TokenDto tokenDto = userService.login(authorizationDto);
-        log.info("User {} was authorized.", authorizationDto.getLoginOrEmail());
+    public ResponseEntity<TokenDto> login(@RequestBody @Valid AuthorizationDto authorization) {
+        TokenDto tokenDto = userService.login(authorization);
+        log.info("User {} was authorized.", authorization.getLoginOrEmail());
         return ResponseEntity.ok(tokenDto);
     }
 
