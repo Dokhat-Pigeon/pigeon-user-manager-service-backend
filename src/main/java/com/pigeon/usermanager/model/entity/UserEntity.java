@@ -41,6 +41,11 @@ public class UserEntity {
     private String login;
 
     /**
+     * Имя пользователя
+     */
+    private String name;
+
+    /**
      * Пароль пользователя
      */
     private String password;
