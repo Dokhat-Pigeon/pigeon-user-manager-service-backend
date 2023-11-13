@@ -22,8 +22,6 @@ public class RegistrationCache {
     @Id
     private UUID recordId;
 
-    private Long userId;
-
     private String email;
 
     private String login;
