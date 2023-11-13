@@ -7,18 +7,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
-import java.io.Serializable;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-@RedisHash(value = "user")
+@RedisHash(value = "registration")
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCache implements Serializable {
+public class RegistrationCache {
 
     @Id
-    private Long id;
+    private UUID recordId;
 
     private String email;
 
@@ -26,5 +28,10 @@ public class UserCache implements Serializable {
 
     private String name;
 
+    private String password;
+
     private UserStatus status;
+
+    @TimeToLive(unit = TimeUnit.MINUTES)
+    private Long timeToLive;
 }
