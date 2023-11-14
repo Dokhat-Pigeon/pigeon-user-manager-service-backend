@@ -14,7 +14,7 @@ public enum UserErrorCode implements ErrorCode {
     WRONG_EMAIL_ADDRESS("Неправильно указан адрес электронной почты"),
     EMAIL_ALREADY_USE("Электронная почта уже используется"),
     LOGIN_ALREADY_USE("Логин уже используется"),
-    WRONG_VERIFICATION_URL("Неверный URL верификации почты"),
+    WRONG_VERIFICATION_URL("Неверный URL верификации почты", HttpStatus.NOT_FOUND),
     ;
 
     private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
