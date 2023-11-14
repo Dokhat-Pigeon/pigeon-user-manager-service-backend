@@ -1,5 +1,6 @@
 package com.pigeon.usermanager.service;
 
+import com.pigeon.usermanager.model.cache.ChangePasswordCache;
 import com.pigeon.usermanager.model.cache.RegistrationCache;
 import com.pigeon.usermanager.model.cache.UserCache;
 
@@ -13,7 +14,7 @@ public interface EmailService {
 
     /**
      *  Sending confirmation letter for change password
-     * @param user {@link UserCache} User information
+     * @param changePassword {@link UserCache} Change password information
      */
-    void sendChangePassword(UserCache user);
+    void sendChangePassword(ChangePasswordCache changePassword);
 }

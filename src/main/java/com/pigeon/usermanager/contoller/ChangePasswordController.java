@@ -1,5 +1,6 @@
 package com.pigeon.usermanager.contoller;
 
+import com.pigeon.usermanager.model.dto.ChangePasswordDto;
 import com.pigeon.usermanager.service.ChangePasswordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,13 +43,13 @@ public class ChangePasswordController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/confirm/{uuid}")
+    @PutMapping("/confirm")
     @Operation(description = "Подтверждение смены пароля")
     public ResponseEntity<Void> confirm(
-            @PathVariable @Parameter(description = "Идентификатор смены пароля") UUID uuid
+            @RequestBody ChangePasswordDto changePassword
     ) {
-        changePasswordService.confirm(uuid);
-        log.info("Password was changed for record with uuid: {}", uuid);
+        changePasswordService.confirm(changePassword);
+        log.info("Password was changed for record with uuid: {}", changePassword.getUuid());
         return ResponseEntity.ok().build();
     }
 }

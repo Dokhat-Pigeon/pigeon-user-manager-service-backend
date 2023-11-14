@@ -1,5 +1,7 @@
 package com.pigeon.usermanager.service;
 
+import com.pigeon.usermanager.model.dto.ChangePasswordDto;
+
 import java.util.UUID;
 
 /**
@@ -24,7 +26,7 @@ public interface ChangePasswordService {
     /**
      * Confirmation of changing the password
      *
-     * @param uuid Change password record uuid
+     * @param changePassword Change password form data
      */
-    void confirm(UUID uuid);
+    void confirm(ChangePasswordDto changePassword);
 }
