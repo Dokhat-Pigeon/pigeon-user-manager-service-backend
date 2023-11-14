@@ -1,4 +1,4 @@
-package sng.survey.exception;
+package com.pigeon.usermanager.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

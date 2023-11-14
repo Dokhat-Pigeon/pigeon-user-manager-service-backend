@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     @ExceptionHandler
     public ResponseEntity<AppError> catchResourceNotFoundException(NotFoundException e) {
         log.error(e.getMessage(), e);
@@ -22,8 +23,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> catchCycleWasFoundException(CycleWasFoundException e) {
+    public ResponseEntity<AppError> catchAlreadyExistException(WrongPasswordException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.CONFLICT.value(), e.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new AppError(
+                HttpStatus.UNAUTHORIZED.value(),
+                e.getMessage()
+        ), HttpStatus.UNAUTHORIZED);
     }
 }

@@ -3,6 +3,7 @@ package com.pigeon.usermanager.contoller;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 import java.util.UUID;
 

@@ -4,6 +4,7 @@ import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 
+import javax.security.auth.message.AuthException;
 import java.util.UUID;
 
 /**
