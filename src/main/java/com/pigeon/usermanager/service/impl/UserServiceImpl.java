@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.pigeon.usermanager.exception.enums.UserErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenDto verify(UUID uuid) {
         Optional<UserEntity> userEntity = this.endRegister(registrationCacheRepository.findById(uuid));
-        if(userEntity.isEmpty()) this.generateException(UserErrorCode.WRONG_VERIFICATION_URL);
+        if (userEntity.isEmpty()) this.generateException(UserErrorCode.WRONG_VERIFICATION_URL);
 
         registrationCacheRepository.deleteById(uuid);
         return tokenService.createAuthToken(userEntity.get());
@@ -71,15 +73,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validationRegistration(RegistrationDto registration) {
-        if (!EmailValidator.getInstance().isValid(registration.getEmail())) {
-            this.generateException(UserErrorCode.WRONG_EMAIL_ADDRESS);
-        } else if (this.isNotUniqueEmail(registration)) {
-            this.generateException(UserErrorCode.EMAIL_ALREADY_USE);
-        } else if (this.isNotUniqueLogin(registration)) {
-            this.generateException(UserErrorCode.LOGIN_ALREADY_USE);
-        } else if (!registration.getPassword().equals(registration.getConfirmPassword())) {
-            this.generateException(UserErrorCode.DIFFERENT_CONFIRM_PASSWORD);
-        }
+        UserErrorCode errorCode = null;
+        if (!EmailValidator.getInstance().isValid(registration.getEmail())) errorCode = WRONG_EMAIL_ADDRESS;
+        else if (this.isNotUniqueEmail(registration)) errorCode = EMAIL_ALREADY_USE;
+        else if (this.isNotUniqueLogin(registration)) errorCode = LOGIN_ALREADY_USE;
+        else if (this.checkConfirmPassword(registration)) errorCode = DIFFERENT_CONFIRM_PASSWORD;
+
+        if (errorCode != null) this.generateException(errorCode);
     }
 
     private boolean isNotUniqueEmail(RegistrationDto registration) {
@@ -88,6 +88,10 @@ public class UserServiceImpl implements UserService {
 
     private boolean isNotUniqueLogin(RegistrationDto registration) {
         return userRepository.findByLogin(registration.getLogin()).isPresent();
+    }
+
+    private boolean checkConfirmPassword(RegistrationDto registration) {
+        return !registration.getPassword().equals(registration.getConfirmPassword());
     }
 
     private void generateException(UserErrorCode errorCode) {
