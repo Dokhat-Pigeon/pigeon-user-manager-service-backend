@@ -2,9 +2,12 @@ package com.pigeon.usermanager.component;
 
 import com.pigeon.usermanager.model.context.EmailContext;
 
-import javax.mail.MessagingException;
-
 public interface EmailSender {
 
-    void sendMail(EmailContext email) throws MessagingException;
+    /**
+     * Sending email letter
+     * @param email {@link EmailContext} Context with information for letter
+     */
+
+    void sendMail(EmailContext email);
 }

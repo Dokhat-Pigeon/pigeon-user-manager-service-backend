@@ -5,9 +5,9 @@
     <title>Подтверждение почты</title>
 </head>
 <body>
-    <div>
-        Здравствуйте, ${username}, для подтверждения почты и окончания регистрации
-        перейдите по данной ссылке ${verificationURL}
-    </div>
+    <span>
+        Здравствуйте, <span th:text="${username}"></span>, для подтверждения почты и окончания регистрации
+        перейдите по данной ссылке <span th:text="${verificationURL}"></span>.
+    </span>
 </body>
 </html>

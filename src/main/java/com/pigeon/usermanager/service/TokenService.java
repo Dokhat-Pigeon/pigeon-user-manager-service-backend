@@ -24,9 +24,9 @@ public interface TokenService {
     TokenDto updateAuthToken(RefreshTokenDto  refreshTokenDto);
 
     /**
-     * Generate auth and refresh tokens
+     * Create auth and refresh tokens
      *
      * @return {@link TokenDto}
      */
-    TokenDto generateTokens(UserEntity user);
+    TokenDto createAuthToken(UserEntity user);
 }

@@ -54,7 +54,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public TokenDto generateTokens(UserEntity user) {
+    public TokenDto createAuthToken(UserEntity user) {
         final String accessToken = tokenProvider.generateAccessToken(user);
         final String refreshToken = tokenProvider.generateRefreshToken(user);
         refreshStorage.put(user.getLogin(), refreshToken);
