@@ -33,8 +33,6 @@ public class UserServiceImpl implements UserService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
     private final EmailService emailService;
-    private final TokenService tokenService;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RegistrationCacheRepository registrationCacheRepository;
 
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
         final UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail())
                 .orElseThrow(() -> new NotFoundException("User not found"));
         if (user.getPassword().equals(authorizationDto.getPassword())) {
-            return tokenService.generateTokens(user);
+            return tokenService.createAuthToken(user);
         } else {
             throw new WrongPasswordException("Wrong password");
         }

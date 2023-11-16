@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @Tag(name = "Token", description = "API для получения и обновления токенов аунтентификации")
 @RestController
 @RequestMapping("/v1/token")
@@ -21,8 +23,8 @@ public class TokenController {
 
     @GetMapping
     @Operation(description = "Получение токена авторизации")
-    public ResponseEntity<TokenDto> getAuthToken() {
-        TokenDto tokenDto = tokenService.getAuthToken();
+    public ResponseEntity<TokenDto> getAuthToken(HttpSession session) {
+        TokenDto tokenDto = tokenService.getAuthToken(session);
         return ResponseEntity.ok(tokenDto);
     }
 

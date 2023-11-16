@@ -4,6 +4,8 @@ import com.pigeon.usermanager.model.dto.RefreshTokenDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Service for working with the authentication token
  */
@@ -14,7 +16,7 @@ public interface TokenService {
      *
      * @return {@link TokenDto}
      */
-    TokenDto getAuthToken();
+    TokenDto getAuthToken(HttpSession session);
 
     /**
      * Update auth token
