@@ -16,7 +16,7 @@ public interface TokenService {
      *
      * @return {@link TokenDto}
      */
-    TokenDto getAuthToken(HttpSession session);
+    TokenDto getAuthToken();
 
     /**
      * Update auth token

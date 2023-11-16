@@ -3,6 +3,8 @@ package com.pigeon.usermanager.security;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -33,6 +35,9 @@ public class JwtFilter extends GenericFilterBean {
             final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
             jwtInfoToken.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+        } else {
+            throw new AuthenticationServiceException("Отсутствует авторизация пользователя");
+            //сделай для неавторизованного пользователя
         }
         fc.doFilter(request, response);
     }

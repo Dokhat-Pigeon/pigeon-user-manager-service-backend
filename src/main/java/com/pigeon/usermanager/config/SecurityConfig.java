@@ -22,9 +22,8 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final String[] AUTH_PATHS = {
-            "/api/v1/user/registration",
-            "/api/v1/user/verification/{uuid}",
-            "/api/v1/user/authorization"
+            "/api/v1/user/logout/**",
+            "/api/v1/blacklist/**"
     };
 
     @Bean
@@ -35,8 +34,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_PATHS).permitAll()
-                .antMatchers("/**").authenticated()
+                .antMatchers(AUTH_PATHS).authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

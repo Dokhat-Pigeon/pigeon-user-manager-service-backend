@@ -23,8 +23,8 @@ public class TokenController {
 
     @GetMapping
     @Operation(description = "Получение токена авторизации")
-    public ResponseEntity<TokenDto> getAuthToken(HttpSession session) {
-        TokenDto tokenDto = tokenService.getAuthToken(session);
+    public ResponseEntity<TokenDto> getAuthToken() {
+        TokenDto tokenDto = tokenService.getAuthToken();
         return ResponseEntity.ok(tokenDto);
     }
 

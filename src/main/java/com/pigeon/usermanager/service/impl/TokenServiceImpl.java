@@ -12,8 +12,14 @@ import com.pigeon.usermanager.security.JwtProvider;
 import com.pigeon.usermanager.service.TokenService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
@@ -27,8 +33,9 @@ public class TokenServiceImpl implements TokenService {
     private final UserRepository userRepository;
 
     @Override
-    public TokenDto getAuthToken(HttpSession session) {
-        String refreshToken = (String) session.getAttribute("refreshToken");
+    public TokenDto getAuthToken() {
+        HttpSession session1 = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes())).getRequest().getSession();
+        String refreshToken = (String) session1.getAttribute("refreshToken");
         if (!tokenProvider.validateRefreshToken(refreshToken)) {
             return TokenDto.builder().build();
         }
@@ -41,10 +48,12 @@ public class TokenServiceImpl implements TokenService {
         final UserEntity user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         final String accessToken = tokenProvider.generateAccessToken(user);
-        return TokenDto.builder()
+        TokenDto build = TokenDto.builder()
                 .authorization(accessToken)
                 .refresh(refreshToken)
                 .build();
+        session1.setAttribute("token", build);
+        return (TokenDto) session1.getAttribute("token");
     }
 
     @Override
@@ -72,8 +81,11 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public TokenDto createAuthToken(UserEntity user) {
         TokenCache token = this.generateTokens(user);
+        HttpSession session = this.getSession();
         tokenCacheRepository.save(token);
-        return tokenMapper.toDto(token);
+        TokenDto dto = tokenMapper.toDto(token);
+        session.setAttribute("token", dto);
+        return dto;
     }
 
     private TokenCache generateTokens(UserEntity user) {
@@ -84,5 +96,11 @@ public class TokenServiceImpl implements TokenService {
                 .authorization(accessToken)
                 .refresh(refreshToken)
                 .build();
+    }
+
+    private HttpSession getSession() {
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        assert attributes != null;
+        return ((ServletRequestAttributes) attributes).getRequest().getSession();
     }
 }

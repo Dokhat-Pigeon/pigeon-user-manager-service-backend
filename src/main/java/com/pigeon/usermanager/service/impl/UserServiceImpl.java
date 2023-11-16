@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     public TokenDto login(AuthorizationDto authorizationDto) {
         final UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail())
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        if (user.getPassword().equals(authorizationDto.getPassword())) {
+        if (passwordEncoder.matches(authorizationDto.getPassword(), user.getPassword())) {
             return tokenService.createAuthToken(user);
         } else {
             throw new WrongPasswordException("Wrong password");
