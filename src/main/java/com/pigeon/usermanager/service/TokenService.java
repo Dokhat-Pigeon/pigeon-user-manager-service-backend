@@ -23,7 +23,7 @@ public interface TokenService {
      *
      * @return {@link TokenDto}
      */
-    TokenDto updateAuthToken(RefreshTokenDto  refreshTokenDto);
+    TokenDto updateAuthToken();
 
     /**
      * Create auth and refresh tokens
@@ -31,4 +31,11 @@ public interface TokenService {
      * @return {@link TokenDto}
      */
     TokenDto createAuthToken(UserEntity user);
+
+    /**
+     * Remove token from session
+     *
+     * @return {@link UserEntity}
+     */
+    UserEntity removeToken();
 }

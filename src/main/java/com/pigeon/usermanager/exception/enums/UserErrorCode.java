@@ -11,7 +11,9 @@ import java.text.MessageFormat;
 public enum UserErrorCode implements ErrorCode {
 
     DIFFERENT_CONFIRM_PASSWORD("Подтверждение пароля и пароль не совпадают"),
+    WRONG_PASSWORD("Неверный пароль"),
     WRONG_EMAIL_ADDRESS("Неправильно указан адрес электронной почты"),
+    WRONG_EMAIL_OR_LOGIN("Неправильно указан логин/адрес электронной почты"),
     EMAIL_ALREADY_USE("Электронная почта уже используется"),
     LOGIN_ALREADY_USE("Логин уже используется"),
     WRONG_VERIFICATION_URL("Неверный URL верификации почты"),

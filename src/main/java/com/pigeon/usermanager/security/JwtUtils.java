@@ -4,18 +4,24 @@ import com.pigeon.usermanager.model.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtils {
 
     public static JwtAuthentication generate(Claims claims) {
-        final JwtAuthentication jwtInfoToken = new JwtAuthentication();
+        JwtAuthentication jwtInfoToken = new JwtAuthentication();
         jwtInfoToken.setRoles(getRoles(claims));
         jwtInfoToken.setFirstName(claims.get("name", String.class));
         jwtInfoToken.setUsername(claims.getSubject());
+        return jwtInfoToken;
+    }
+
+    public static JwtAuthentication generateAnonymous() {
+        JwtAuthentication jwtInfoToken = new JwtAuthentication();
+        jwtInfoToken.setRoles(Set.of(UserRole.ANONYMOUS));
+        jwtInfoToken.setFirstName("anonymous");
+        jwtInfoToken.setUsername("anonymous");
         return jwtInfoToken;
     }
 

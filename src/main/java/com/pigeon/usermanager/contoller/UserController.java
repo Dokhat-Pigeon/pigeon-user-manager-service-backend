@@ -55,8 +55,8 @@ public class UserController {
     @GetMapping("/logout")
     @Operation(description = "Позволяет выйти пользователю из активной сессии")
     public ResponseEntity<Void> logout() {
-        log.info("TEEEEEEEEEEEEEEEEEST");
-        userService.logout();
+        UserEntity user = userService.logout();
+        log.info("User {} was logout.", user.getLogin());
         return ResponseEntity.ok().build();
     }
 }

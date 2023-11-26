@@ -33,9 +33,9 @@ public class JwtProvider {
     }
 
     public String generateAccessToken(@NonNull UserEntity user) {
-        final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
-        final Date accessExpiration = Date.from(accessExpirationInstant);
+        LocalDateTime now = LocalDateTime.now();
+        Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
@@ -46,9 +46,9 @@ public class JwtProvider {
     }
 
     public String generateRefreshToken(@NonNull UserEntity user) {
-        final LocalDateTime now = LocalDateTime.now();
-        final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
-        final Date refreshExpiration = Date.from(refreshExpirationInstant);
+        LocalDateTime now = LocalDateTime.now();
+        Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getLogin())
                 .setExpiration(refreshExpiration)
@@ -57,11 +57,11 @@ public class JwtProvider {
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {
-        return validateToken(accessToken, jwtAccessSecret);
+        return this.validateToken(accessToken, jwtAccessSecret);
     }
 
     public boolean validateRefreshToken(@NonNull String refreshToken) {
-        return validateToken(refreshToken, jwtRefreshSecret);
+        return this.validateToken(refreshToken, jwtRefreshSecret);
     }
 
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {
@@ -86,11 +86,11 @@ public class JwtProvider {
     }
 
     public Claims getAccessClaims(@NonNull String token) {
-        return getClaims(token, jwtAccessSecret);
+        return this.getClaims(token, jwtAccessSecret);
     }
 
     public Claims getRefreshClaims(@NonNull String token) {
-        return getClaims(token, jwtRefreshSecret);
+        return this.getClaims(token, jwtRefreshSecret);
     }
 
     private Claims getClaims(@NonNull String token, @NonNull Key secret) {

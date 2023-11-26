@@ -1,7 +1,5 @@
 package com.pigeon.usermanager.service.impl;
 
-import com.pigeon.usermanager.exception.NotFoundException;
-import com.pigeon.usermanager.exception.WrongPasswordException;
 import com.pigeon.usermanager.exception.UserServiceException;
 import com.pigeon.usermanager.exception.enums.UserErrorCode;
 import com.pigeon.usermanager.mapper.UserMapper;
@@ -61,19 +59,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto login(AuthorizationDto authorizationDto) {
-        final UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+    public TokenDto login(AuthorizationDto authorizationDto) throws UserServiceException {
+        UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail())
+                .orElseThrow(() -> this.createException(UserErrorCode.WRONG_EMAIL_OR_LOGIN));
         if (passwordEncoder.matches(authorizationDto.getPassword(), user.getPassword())) {
             return tokenService.createAuthToken(user);
-        } else {
-            throw new WrongPasswordException("Wrong password");
         }
+        throw this.createException(UserErrorCode.WRONG_PASSWORD);
     }
 
     @Override
-    public void logout() {
-        // TODO
+    public UserEntity logout() {
+        return tokenService.removeToken();
     }
 
     private void validationRegistration(RegistrationDto registration) {
@@ -96,8 +93,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByLogin(registration.getLogin()).isPresent();
     }
 
-    private void generateException(UserErrorCode errorCode) {
-        throw new UserServiceException(errorCode, new Exception());
+    private void generateException(UserErrorCode errorCode) throws UserServiceException {
+        throw this.createException(errorCode);
+    }
+
+    private UserServiceException createException(UserErrorCode errorCode) {
+        return new UserServiceException(errorCode, new Exception());
     }
 
     private Optional<UserEntity> endRegister(Optional<RegistrationCache> registration) {

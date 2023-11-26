@@ -1,10 +1,10 @@
 package com.pigeon.usermanager.exception;
 
-import com.pigeon.usermanager.exception.enums.UserErrorCode;
+import com.pigeon.usermanager.exception.enums.TokenErrorCode;
 
-public class UserServiceException extends ServiceRuntimeException {
+public class TokenServiceException extends ServiceRuntimeException {
 
-    public UserServiceException(UserErrorCode errorCode, Throwable cause, Object... args) {
+    public TokenServiceException(TokenErrorCode errorCode, Throwable cause, Object... args) {
         super(errorCode, cause, args);
     }
 }

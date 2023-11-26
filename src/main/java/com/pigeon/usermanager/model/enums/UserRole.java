@@ -16,6 +16,7 @@ public enum UserRole implements GrantedAuthority {
     TESTER("Тестер"),
     MODERATOR("Модератор"),
     USER("Пользователь"),
+    ANONYMOUS("Гость")
     ;
 
     private final String label;
