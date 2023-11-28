@@ -1,5 +1,6 @@
 package com.pigeon.usermanager.config;
 
+import com.pigeon.usermanager.model.enums.UserRole;
 import com.pigeon.usermanager.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,19 +23,20 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final String[] AUTH_PATHS = {
-            "/api/v1/user/logout/**",
-            "/api/v1/blacklist/**"
+            "/v1/user/logout/**",
+            "/v1/blacklist/**"
     };
 
+    //TODO add WHITE_LIST
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors().and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_PATHS).authenticated()
+                .antMatchers(AUTH_PATHS).hasAnyRole(UserRole.USER.name())
                 .anyRequest().permitAll()
                 .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

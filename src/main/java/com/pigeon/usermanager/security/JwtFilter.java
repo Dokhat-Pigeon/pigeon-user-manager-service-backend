@@ -34,9 +34,9 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
         }
         else {
-//            JwtAuthentication jwtInfoToken = JwtUtils.generateAnonymous();
-//            jwtInfoToken.setAuthenticated(true);
-//            SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+            JwtAuthentication anonymous = JwtUtils.generateAnonymous();
+            anonymous.setAuthenticated(true);
+            SecurityContextHolder.getContext().setAuthentication(anonymous);
         }
         fc.doFilter(request, response);
     }

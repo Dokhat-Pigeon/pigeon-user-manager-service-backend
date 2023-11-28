@@ -1,7 +1,9 @@
 package com.pigeon.usermanager.service.impl;
 
 import com.pigeon.usermanager.exception.TokenServiceException;
+import com.pigeon.usermanager.exception.UserServiceException;
 import com.pigeon.usermanager.exception.enums.TokenErrorCode;
+import com.pigeon.usermanager.exception.enums.UserErrorCode;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.repository.UserRepository;
@@ -24,42 +26,38 @@ public class TokenServiceImpl implements TokenService {
 
     private final JwtProvider tokenProvider;
     private final UserRepository userRepository;
-    private HttpSession session;
 
     @Override
-    public TokenDto getAuthToken() {
-        try {
-            String refreshToken = this.getRefreshTokenFromSession();
-            UserEntity user = this.getUserFromRefresh(refreshToken);
-            String accessToken = tokenProvider.generateAccessToken(user);
-            TokenDto token = this.buildToken(accessToken, refreshToken);
-            this.updateTokensInSession(token);
-            return token;
-        } catch (TokenServiceException e) {
-            return this.buildToken(null, null);
-        }
+    public TokenDto getTokens() {
+        Object tokens = this.getSession().getAttribute(TOKEN_KEY);
+
+        if (tokens == null) throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
+        else return (TokenDto) tokens;
     }
 
     @Override
-    public TokenDto updateAuthToken() throws TokenServiceException {
-        String refreshToken = this.getRefreshTokenFromSession();
-        UserEntity user = this.getUserFromRefresh(refreshToken);
-        return this.createAuthToken(user);
+    public TokenDto updateAuthToken() {
+        TokenDto tokens = this.getTokens();
+        UserEntity user = this.getUserFromRefresh(tokens.getRefresh());
+        tokens.setAuthorization(tokenProvider.generateAccessToken(user));
+
+        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        return tokens;
     }
 
     @Override
     public TokenDto createAuthToken(UserEntity user) {
-        TokenDto token = this.generateTokens(user);
-        this.updateTokensInSession(token);
-        return token;
+        TokenDto tokens = TokenDto.builder()
+                .authorization(tokenProvider.generateAccessToken(user))
+                .refresh(tokenProvider.generateRefreshToken(user))
+                .build();
+        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        return tokens;
     }
 
     @Override
     public UserEntity removeToken() {
-        TokenDto token = this.getTokenFromSession();
-        if (token == null) {
-            throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
-        }
+        TokenDto token = this.getTokens();
         UserEntity user = this.getUserFromRefresh(token.getRefresh());
         this.getSession().removeAttribute(TOKEN_KEY);
         return user;
@@ -72,49 +70,13 @@ public class TokenServiceImpl implements TokenService {
         Claims claims = tokenProvider.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> this.generateException(TokenErrorCode.USER_NOT_FOUND));
-    }
-
-    private TokenDto generateTokens(UserEntity user) {
-        String accessToken = tokenProvider.generateAccessToken(user);
-        String refreshToken = tokenProvider.generateRefreshToken(user);
-        return this.buildToken(accessToken, refreshToken);
-    }
-
-    private TokenDto buildToken(String accessToken, String refreshToken)
-    {
-        return TokenDto.builder()
-                .authorization(accessToken)
-                .refresh(refreshToken)
-                .build();
-    }
-
-    private String getRefreshTokenFromSession() throws TokenServiceException{
-        TokenDto token = this.getTokenFromSession();
-        if (token != null) {
-            return token.getRefresh();
-        }
-        throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
-    }
-
-    private void updateTokensInSession(TokenDto token) {
-        HttpSession session = this.getSession();
-        session.setAttribute(TOKEN_KEY, token);
-    }
-
-    private TokenDto getTokenFromSession() {
-        HttpSession session = this.getSession();
-        return (TokenDto) session.getAttribute(TOKEN_KEY);
+                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
     }
 
     private HttpSession getSession() {
-        if (session != null) {
-            return session;
-        }
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         assert attributes != null;
-        session = ((ServletRequestAttributes) attributes).getRequest().getSession();
-        return session;
+        return ((ServletRequestAttributes) attributes).getRequest().getSession();
     }
 
     private TokenServiceException generateException(TokenErrorCode errorCode) {

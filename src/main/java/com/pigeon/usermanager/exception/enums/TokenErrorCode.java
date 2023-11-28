@@ -11,8 +11,7 @@ import java.text.MessageFormat;
 public enum TokenErrorCode implements ErrorCode {
 
     INVALID_REFRESH_TOKEN("Невалидный Refresh токен"),
-    USER_NOT_FOUND("Пользователь не существует или был удален"),
-    TOKEN_NOT_FOUND("Осутствует токен авторизации"),
+    TOKEN_NOT_FOUND("Отсутствует токен авторизации"),
     ;
 
     private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;

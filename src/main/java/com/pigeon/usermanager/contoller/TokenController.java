@@ -21,13 +21,13 @@ public class TokenController {
     @GetMapping
     @Operation(description = "Получение токена авторизации")
     public ResponseEntity<TokenDto> getAuthToken() {
-        TokenDto tokenDto = tokenService.getAuthToken();
+        TokenDto tokenDto = tokenService.getTokens();
         return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping
     @Operation(description = "Получение обновленного JWT")
-    public ResponseEntity<TokenDto> getRefreshToken() {
+    public ResponseEntity<TokenDto> updateToken() {
         TokenDto tokenDto = tokenService.updateAuthToken();
         return ResponseEntity.ok(tokenDto);
     }

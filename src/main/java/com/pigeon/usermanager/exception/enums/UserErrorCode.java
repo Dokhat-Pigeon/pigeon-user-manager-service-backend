@@ -17,6 +17,7 @@ public enum UserErrorCode implements ErrorCode {
     EMAIL_ALREADY_USE("Электронная почта уже используется"),
     LOGIN_ALREADY_USE("Логин уже используется"),
     WRONG_VERIFICATION_URL("Неверный URL верификации почты"),
+    USER_NOT_FOUND("Пользователь не существует или был удален"),
     ;
 
     private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;

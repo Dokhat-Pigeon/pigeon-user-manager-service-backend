@@ -59,9 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto login(AuthorizationDto authorizationDto) throws UserServiceException {
-        UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail())
-                .orElseThrow(() -> this.createException(UserErrorCode.WRONG_EMAIL_OR_LOGIN));
+    public TokenDto login(AuthorizationDto authorizationDto) {
+        UserEntity user = this.getByLoginOrEmail(authorizationDto.getLoginOrEmail());
         if (passwordEncoder.matches(authorizationDto.getPassword(), user.getPassword())) {
             return tokenService.createAuthToken(user);
         }
@@ -86,19 +85,15 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isNotUniqueEmail(RegistrationDto registration) {
-        return userRepository.findByEmail(registration.getEmail()).isPresent();
+        String email = registration.getEmail();
+        return userRepository.findByEmail(email).isPresent()
+                || registrationCacheRepository.findByEmail(email).isPresent();
     }
 
     private boolean isNotUniqueLogin(RegistrationDto registration) {
-        return userRepository.findByLogin(registration.getLogin()).isPresent();
-    }
-
-    private void generateException(UserErrorCode errorCode) throws UserServiceException {
-        throw this.createException(errorCode);
-    }
-
-    private UserServiceException createException(UserErrorCode errorCode) {
-        return new UserServiceException(errorCode, new Exception());
+        String login = registration.getLogin();
+        return userRepository.findByLogin(login).isPresent()
+                || registrationCacheRepository.findByLogin(login).isPresent();
     }
 
     private Optional<UserEntity> endRegister(Optional<RegistrationCache> registration) {
@@ -111,7 +106,16 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public Optional<UserEntity> getByLoginOrEmail(String loginOrEmail) {
-        return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail);
+    private UserEntity getByLoginOrEmail(String loginOrEmail) {
+        return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
+                .orElseThrow(() -> this.createException(UserErrorCode.WRONG_EMAIL_OR_LOGIN));
+    }
+
+    private void generateException(UserErrorCode errorCode) throws UserServiceException {
+        throw this.createException(errorCode);
+    }
+
+    private UserServiceException createException(UserErrorCode errorCode) {
+        return new UserServiceException(errorCode, new Exception());
     }
 }
