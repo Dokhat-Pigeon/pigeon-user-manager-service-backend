@@ -91,15 +91,15 @@ public class JwtProvider {
         return false;
     }
 
-    public ClaimsConstants getAccessClaims(@NonNull String token) {
+    public Claims getAccessClaims(@NonNull String token) {
         return this.getClaims(token, jwtAccessSecret);
     }
 
-    public ClaimsConstants getRefreshClaims(@NonNull String token) {
+    public Claims getRefreshClaims(@NonNull String token) {
         return this.getClaims(token, jwtRefreshSecret);
     }
 
-    private ClaimsConstants getClaims(@NonNull String token, @NonNull Key secret) {
+    private Claims getClaims(@NonNull String token, @NonNull Key secret) {
         return Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
