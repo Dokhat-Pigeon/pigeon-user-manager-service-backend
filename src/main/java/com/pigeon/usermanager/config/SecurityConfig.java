@@ -23,11 +23,21 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final String[] AUTH_PATHS = {
-            "/v1/user/logout/**",
+            "/v1/user/logout",
             "/v1/blacklist/**"
     };
 
-    //TODO add WHITE_LIST
+    private final String[] WHITE_LIST = {
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/v1/token",
+            "/v1/change-password/**",
+            "/v1/user/verification/**",
+            "/v1/user/registration",
+            "/v1/user/authorization"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -37,7 +47,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_PATHS).hasAnyRole(UserRole.USER.name())
-                .anyRequest().permitAll()
+                .antMatchers(WHITE_LIST).permitAll()
                 .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
