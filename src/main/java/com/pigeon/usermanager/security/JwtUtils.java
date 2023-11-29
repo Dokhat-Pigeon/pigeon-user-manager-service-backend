@@ -12,7 +12,7 @@ public final class JwtUtils {
     public static JwtAuthentication generate(Claims claims) {
         JwtAuthentication jwtInfoToken = new JwtAuthentication();
         jwtInfoToken.setRoles(getRoles(claims));
-        jwtInfoToken.setFirstName(claims.get("name", String.class));
+        jwtInfoToken.setFirstName(claims.get(ClaimsConstants.NAME_KEY, String.class));
         jwtInfoToken.setUsername(claims.getSubject());
         return jwtInfoToken;
     }
@@ -26,7 +26,7 @@ public final class JwtUtils {
     }
 
     private static Set<UserRole> getRoles(Claims claims) {
-        String role = claims.get("role", String.class);
+        String role = claims.get(ClaimsConstants.ROLE_KEY, String.class);
         return Set.of(UserRole.valueOf(role));
     }
 

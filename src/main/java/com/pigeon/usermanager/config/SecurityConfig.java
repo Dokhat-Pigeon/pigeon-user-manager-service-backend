@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(AUTH_PATHS).hasAnyRole(UserRole.USER.name())
                 .antMatchers(WHITE_LIST).permitAll()
+                .anyRequest().hasAnyRole(UserRole.ADMINISTRATOR.name())
                 .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

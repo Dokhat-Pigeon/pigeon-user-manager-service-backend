@@ -46,8 +46,8 @@ public class JwtProvider {
                 .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("role", user.getRole())
-                .claim("name", user.getName())
+                .claim(ClaimsConstants.ROLE_KEY, user.getRole())
+                .claim(ClaimsConstants.NAME_KEY, user.getName())
                 .compact();
     }
 
@@ -91,15 +91,15 @@ public class JwtProvider {
         return false;
     }
 
-    public Claims getAccessClaims(@NonNull String token) {
+    public ClaimsConstants getAccessClaims(@NonNull String token) {
         return this.getClaims(token, jwtAccessSecret);
     }
 
-    public Claims getRefreshClaims(@NonNull String token) {
+    public ClaimsConstants getRefreshClaims(@NonNull String token) {
         return this.getClaims(token, jwtRefreshSecret);
     }
 
-    private Claims getClaims(@NonNull String token, @NonNull Key secret) {
+    private ClaimsConstants getClaims(@NonNull String token, @NonNull Key secret) {
         return Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
