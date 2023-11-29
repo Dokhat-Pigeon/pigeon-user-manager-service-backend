@@ -1,6 +1,5 @@
 package com.pigeon.usermanager.service;
 
-import com.pigeon.usermanager.model.dto.RefreshTokenDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 
@@ -14,14 +13,26 @@ public interface TokenService {
      *
      * @return {@link TokenDto}
      */
-    TokenDto getAuthToken();
+    TokenDto getTokens();
 
     /**
      * Update auth token
      *
      * @return {@link TokenDto}
      */
-    TokenDto updateAuthToken(RefreshTokenDto  refreshTokenDto);
+    TokenDto updateAuthToken();
 
+    /**
+     * Create auth and refresh tokens
+     *
+     * @return {@link TokenDto}
+     */
     TokenDto createAuthToken(UserEntity user);
+
+    /**
+     * Remove token from session
+     *
+     * @return {@link UserEntity}
+     */
+    UserEntity removeToken();
 }

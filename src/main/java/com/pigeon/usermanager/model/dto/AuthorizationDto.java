@@ -1,5 +1,6 @@
 package com.pigeon.usermanager.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class AuthorizationDto {
 
     @NotBlank
     @Schema(description = "Логин или Почта")
+    @JsonProperty("login_or_email")
     private String loginOrEmail;
 
     @NotBlank

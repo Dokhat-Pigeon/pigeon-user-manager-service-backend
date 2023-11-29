@@ -3,6 +3,7 @@ package com.pigeon.usermanager.contoller;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +54,8 @@ public class UserController {
     @GetMapping("/logout")
     @Operation(description = "Позволяет выйти пользователю из активной сессии")
     public ResponseEntity<Void> logout() {
-        userService.logout();
+        UserEntity user = userService.logout();
+        log.info("User {} was logout.", user.getLogin());
         return ResponseEntity.ok().build();
     }
 }
