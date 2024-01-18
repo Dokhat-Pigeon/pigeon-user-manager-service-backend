@@ -3,7 +3,9 @@ package com.pigeon.usermanager.service;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.entity.UserEntity;
 
+import javax.security.auth.message.AuthException;
 import java.util.UUID;
 
 /**
@@ -36,6 +38,8 @@ public interface UserService {
 
     /**
      * User logout
+     *
+     * @return {@link UserEntity}
      */
-    void logout();
+    UserEntity logout();
 }

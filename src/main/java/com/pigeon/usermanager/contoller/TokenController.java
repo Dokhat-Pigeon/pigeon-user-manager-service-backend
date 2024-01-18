@@ -1,6 +1,5 @@
 package com.pigeon.usermanager.contoller;
 
-import com.pigeon.usermanager.model.dto.RefreshTokenDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,14 +21,14 @@ public class TokenController {
     @GetMapping
     @Operation(description = "Получение токена авторизации")
     public ResponseEntity<TokenDto> getAuthToken() {
-        TokenDto tokenDto = tokenService.getAuthToken();
+        TokenDto tokenDto = tokenService.getTokens();
         return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping
     @Operation(description = "Получение обновленного JWT")
-    public ResponseEntity<TokenDto> getRefreshToken(@RequestBody RefreshTokenDto refresh) {
-        TokenDto tokenDto = tokenService.updateAuthToken(refresh);
+    public ResponseEntity<TokenDto> updateToken() {
+        TokenDto tokenDto = tokenService.updateAuthToken();
         return ResponseEntity.ok(tokenDto);
     }
 }
