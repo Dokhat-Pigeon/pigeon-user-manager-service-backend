@@ -1,7 +1,7 @@
 package com.pigeon.usermanager.service.impl;
 
-import com.pigeon.usermanager.exception.ChangePasswordException;
-import com.pigeon.usermanager.exception.enums.ChangePasswordError;
+import com.pigeon.usermanager.exception.http.ChangePasswordException;
+import com.pigeon.usermanager.exception.enums.http.ChangePasswordError;
 import com.pigeon.usermanager.model.cache.ChangePasswordCache;
 import com.pigeon.usermanager.model.dto.ChangePasswordDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.pigeon.usermanager.exception.enums.ChangePasswordError.*;
+import static com.pigeon.usermanager.exception.enums.http.ChangePasswordError.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +62,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
     }
 
     private ChangePasswordException generateException(ChangePasswordError error, Object... args) {
-        return new ChangePasswordException(error, new Exception(), args);
+        return new ChangePasswordException(error, args);
     }
 
     private void throwException(ChangePasswordError error, Object... args) {

@@ -43,7 +43,7 @@ public class SecurityConfig {
         return http
                 .cors().and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_PATHS).hasAnyRole(UserRole.USER.name())

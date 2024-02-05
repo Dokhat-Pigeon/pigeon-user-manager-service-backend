@@ -5,7 +5,7 @@ import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 
-import javax.security.auth.message.AuthException;
+import java.security.Principal;
 import java.util.UUID;
 
 /**
@@ -42,4 +42,12 @@ public interface UserService {
      * @return {@link UserEntity}
      */
     UserEntity logout();
+
+    /**
+     * Update online status
+     *
+     * @param principal Security principal
+     * @param isOnline Online flag
+     */
+    void updateOnlineStatus(Principal principal, boolean isOnline);
 }

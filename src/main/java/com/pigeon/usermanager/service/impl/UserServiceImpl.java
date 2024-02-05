@@ -1,29 +1,34 @@
 package com.pigeon.usermanager.service.impl;
 
-import com.pigeon.usermanager.exception.UserServiceException;
-import com.pigeon.usermanager.exception.enums.UserErrorCode;
+import com.pigeon.usermanager.exception.enums.http.UserErrorCode;
+import com.pigeon.usermanager.exception.http.UserServiceException;
+import com.pigeon.usermanager.exception.runtime.UserOnlineServiceException;
 import com.pigeon.usermanager.mapper.UserMapper;
 import com.pigeon.usermanager.model.cache.RegistrationCache;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
-import com.pigeon.usermanager.repository.UserRepository;
 import com.pigeon.usermanager.model.enums.UserRole;
 import com.pigeon.usermanager.model.enums.UserStatus;
+import com.pigeon.usermanager.repository.UserRepository;
 import com.pigeon.usermanager.repository.cache.RegistrationCacheRepository;
+import com.pigeon.usermanager.security.JwtAuthentication;
 import com.pigeon.usermanager.service.EmailService;
 import com.pigeon.usermanager.service.TokenService;
+import com.pigeon.usermanager.service.UserOnlineService;
 import com.pigeon.usermanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
+import java.security.Principal;
 import java.util.UUID;
 
-import static com.pigeon.usermanager.exception.enums.UserErrorCode.*;
+import static com.pigeon.usermanager.exception.enums.http.UserErrorCode.*;
+import static com.pigeon.usermanager.exception.enums.runtime.UserOnlineErrorCode.AUTH_PARSING_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final RegistrationCacheRepository registrationCacheRepository;
+    private final UserOnlineService userOnlineService;
 
     @Value("${cache.registration.verification.ttl}")
     private Long registrationTtl;
@@ -53,11 +59,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDto verify(UUID uuid) {
-        Optional<UserEntity> userEntity = this.endRegister(registrationCacheRepository.findById(uuid));
-        if (userEntity.isEmpty()) this.generateException(UserErrorCode.WRONG_VERIFICATION_URL);
-
-        registrationCacheRepository.deleteById(uuid);
-        return tokenService.createAuthToken(userEntity.get());
+        UserEntity user = this.endRegister(uuid);
+        userOnlineService.create(user);
+        return tokenService.createAuthToken(user);
     }
 
     @Override
@@ -72,6 +76,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity logout() {
         return tokenService.removeToken();
+    }
+
+    @Override
+    public void updateOnlineStatus(Principal principal, boolean isOnline) {
+        if (principal instanceof JwtAuthentication auth) {
+            UserEntity user = this.getByLoginOrEmail(auth.getUsername());
+            userOnlineService.update(user, isOnline);
+        } else {
+            throw new UserOnlineServiceException(AUTH_PARSING_ERROR);
+        }
     }
 
     private void validationRegistration(RegistrationDto registration) {
@@ -96,8 +110,13 @@ public class UserServiceImpl implements UserService {
                 || registrationCacheRepository.findByLogin(login).isPresent();
     }
 
-    private Optional<UserEntity> endRegister(Optional<RegistrationCache> registration) {
-        return registration.map(this::createUserEntity).map(userRepository::save);
+    private UserEntity endRegister(UUID uuid) {
+        UserEntity user = registrationCacheRepository.findById(uuid)
+                .map(this::createUserEntity)
+                .map(userRepository::save)
+                .orElseThrow(() -> this.createException(WRONG_VERIFICATION_URL));
+        registrationCacheRepository.deleteById(uuid);
+        return user;
     }
 
     private UserEntity createUserEntity(RegistrationCache registration) {
@@ -108,7 +127,7 @@ public class UserServiceImpl implements UserService {
 
     private UserEntity getByLoginOrEmail(String loginOrEmail) {
         return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
-                .orElseThrow(() -> this.createException(UserErrorCode.WRONG_EMAIL_OR_LOGIN));
+                .orElseThrow(() -> this.createException(WRONG_EMAIL_OR_LOGIN));
     }
 
     private boolean checkConfirmPassword(RegistrationDto registration) {
@@ -120,6 +139,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserServiceException createException(UserErrorCode errorCode) {
-        return new UserServiceException(errorCode, new Exception());
+        return new UserServiceException(errorCode);
     }
 }

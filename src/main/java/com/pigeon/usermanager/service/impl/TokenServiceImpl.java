@@ -1,9 +1,9 @@
 package com.pigeon.usermanager.service.impl;
 
-import com.pigeon.usermanager.exception.TokenServiceException;
-import com.pigeon.usermanager.exception.UserServiceException;
-import com.pigeon.usermanager.exception.enums.TokenErrorCode;
-import com.pigeon.usermanager.exception.enums.UserErrorCode;
+import com.pigeon.usermanager.exception.http.TokenServiceException;
+import com.pigeon.usermanager.exception.http.UserServiceException;
+import com.pigeon.usermanager.exception.enums.http.TokenErrorCode;
+import com.pigeon.usermanager.exception.enums.http.UserErrorCode;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.repository.UserRepository;
@@ -70,7 +70,7 @@ public class TokenServiceImpl implements TokenService {
         Claims claims = tokenProvider.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
+                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private HttpSession getSession() {
@@ -80,6 +80,6 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private TokenServiceException generateException(TokenErrorCode errorCode) {
-        return new TokenServiceException(errorCode, new Exception());
+        return new TokenServiceException(errorCode);
     }
 }
