@@ -74,6 +74,13 @@ public class UserServiceImpl implements UserService {
         return tokenService.removeToken();
     }
 
+    @Override
+    public UserEntity getUserById(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
+    }
+
     private void validationRegistration(RegistrationDto registration) {
         UserErrorCode errorCode = null;
         if (!EmailValidator.getInstance().isValid(registration.getEmail())) errorCode = WRONG_EMAIL_ADDRESS;

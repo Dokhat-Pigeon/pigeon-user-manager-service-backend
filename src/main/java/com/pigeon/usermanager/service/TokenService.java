@@ -25,6 +25,7 @@ public interface TokenService {
     /**
      * Create auth and refresh tokens
      *
+     * @param user User for token creation
      * @return {@link TokenDto}
      */
     TokenDto createAuthToken(UserEntity user);
@@ -35,4 +36,11 @@ public interface TokenService {
      * @return {@link UserEntity}
      */
     UserEntity removeToken();
+
+    /**
+     * Get user entity from refresh token
+     *
+     * @return {@link UserEntity}
+     */
+    UserEntity getUserFromSession();
 }
