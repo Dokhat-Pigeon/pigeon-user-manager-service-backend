@@ -18,6 +18,6 @@ public class TokenDto implements Serializable {
     @Schema(description = "Токен авторизации")
     private String authorization;
 
-    @Schema(description = "Рефреш токен")
+    @Schema(description = "Токен обновления")
     private String refresh;
 }

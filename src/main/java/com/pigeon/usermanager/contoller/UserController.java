@@ -3,6 +3,7 @@ package com.pigeon.usermanager.contoller;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.dto.UserDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Tag(name = "User", description = "API для управления состоянием пользователей")
@@ -57,5 +59,16 @@ public class UserController {
         UserEntity user = userService.logout();
         log.info("User {} was logout.", user.getLogin());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{login}")
+    @Operation(description = "Получить информацию о пользователе")
+    public ResponseEntity<UserDto> getUserByLogin(
+            @PathVariable @Parameter(description = "Логин пользователя") @NotNull @Valid String login
+    ) {
+        log.info("Getting user by login: {}", login);
+        UserDto user = userService.getByLogin(login);
+        log.info("Returned user: {}, by login: {}", user, login);
+        return ResponseEntity.ok(user);
     }
 }

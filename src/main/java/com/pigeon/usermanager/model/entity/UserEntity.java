@@ -57,7 +57,7 @@ public class UserEntity {
     private String imageName;
 
     /**
-     * Наименование файла изображения для аватарки пользователя
+     * Статус пользователя в системе
      */
     @Enumerated(EnumType.STRING)
     private UserStatus status;

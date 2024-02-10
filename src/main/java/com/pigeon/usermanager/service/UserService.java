@@ -3,9 +3,10 @@ package com.pigeon.usermanager.service;
 import com.pigeon.usermanager.model.dto.AuthorizationDto;
 import com.pigeon.usermanager.model.dto.RegistrationDto;
 import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.dto.UserDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 
-import javax.security.auth.message.AuthException;
+import java.security.Principal;
 import java.util.UUID;
 
 /**
@@ -42,4 +43,20 @@ public interface UserService {
      * @return {@link UserEntity}
      */
     UserEntity logout();
+
+    /**
+     * Update online status
+     *
+     * @param principal Security principal
+     * @param isOnline Online flag
+     * @return Status been changed
+     */
+    boolean updateOnlineStatus(Principal principal, boolean isOnline);
+
+    /**
+     * Get user by login
+     * @param login User login
+     * @return {@link UserDto}
+     */
+    UserDto getByLogin(String login);
 }

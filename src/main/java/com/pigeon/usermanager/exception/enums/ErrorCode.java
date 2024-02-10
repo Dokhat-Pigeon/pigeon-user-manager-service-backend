@@ -1,10 +1,12 @@
 package com.pigeon.usermanager.exception.enums;
 
-import org.springframework.http.HttpStatus;
+import java.text.MessageFormat;
 
 public interface ErrorCode {
 
-    String getMessage(Object... args);
+    String getMessageTemplate();
 
-    HttpStatus getHttpStatus();
+    default String getMessage(Object... args) {
+        return MessageFormat.format(this.getMessageTemplate(), args);
+    }
 }

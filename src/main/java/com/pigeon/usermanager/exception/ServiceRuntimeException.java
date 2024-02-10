@@ -12,4 +12,9 @@ public abstract class ServiceRuntimeException extends RuntimeException {
         super(errorCode.getMessage(args), cause);
         this.errorCode = errorCode;
     }
+
+    public ServiceRuntimeException(ErrorCode errorCode, Object... args) {
+        super(errorCode.getMessage(args));
+        this.errorCode = errorCode;
+    }
 }
