@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.core.DestinationResolutionException;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -51,7 +53,9 @@ public class AuthenticationChannelInterceptor implements ChannelInterceptor {
     private void subscribeAuthenticate(StompHeaderAccessor accessor) {
         String destination = accessor.getDestination();
         if (accessor.getUser() instanceof JwtAuthentication authentication) {
-            boolean isAccess = WsTopic.byPattern(destination)
+            Optional<WsTopic> wsTopic = WsTopic.byPattern(destination);
+            if (wsTopic.isEmpty()) throw new DestinationResolutionException("Not found destination");
+            boolean isAccess = wsTopic
                     .filter(WsTopic::isSecure)
                     .map(topic -> topic.getPath(authentication.getUsername()))
                     .filter(path -> path.equals(destination))

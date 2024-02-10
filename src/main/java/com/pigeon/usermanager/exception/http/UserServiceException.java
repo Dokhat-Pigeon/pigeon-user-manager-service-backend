@@ -10,6 +10,6 @@ public class UserServiceException extends ServiceHttpException {
     }
 
     public UserServiceException(UserErrorCode errorCode, Object... args) {
-        super(errorCode, new Throwable(), args);
+        super(errorCode, args);
     }
 }

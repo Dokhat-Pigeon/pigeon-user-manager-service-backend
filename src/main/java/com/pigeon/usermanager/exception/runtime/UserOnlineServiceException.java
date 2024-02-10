@@ -10,6 +10,6 @@ public class UserOnlineServiceException extends ServiceRuntimeException {
     }
 
     public UserOnlineServiceException(UserOnlineErrorCode errorCode, Object... args) {
-        super(errorCode, new Throwable(), args);
+        super(errorCode, args);
     }
 }

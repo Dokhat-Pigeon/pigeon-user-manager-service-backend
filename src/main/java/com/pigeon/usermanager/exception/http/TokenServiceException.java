@@ -10,6 +10,6 @@ public class TokenServiceException extends ServiceHttpException {
     }
 
     public TokenServiceException(TokenErrorCode errorCode, Object... args) {
-        super(errorCode, new Throwable(), args);
+        super(errorCode, args);
     }
 }

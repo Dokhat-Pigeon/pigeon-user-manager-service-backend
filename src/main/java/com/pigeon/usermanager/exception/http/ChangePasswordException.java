@@ -10,6 +10,6 @@ public class ChangePasswordException extends ServiceHttpException {
     }
 
     public ChangePasswordException(ChangePasswordError errorCode, Object... args) {
-        super(errorCode, new Throwable(), args);
+        super(errorCode, args);
     }
 }
