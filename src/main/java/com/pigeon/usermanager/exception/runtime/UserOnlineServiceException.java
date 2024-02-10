@@ -3,7 +3,7 @@ package com.pigeon.usermanager.exception.runtime;
 import com.pigeon.usermanager.exception.ServiceRuntimeException;
 import com.pigeon.usermanager.exception.enums.runtime.UserOnlineErrorCode;
 
-public class UserOnlineServiceException extends ServiceRuntimeException {
+public final class UserOnlineServiceException extends ServiceRuntimeException {
 
     public UserOnlineServiceException(UserOnlineErrorCode errorCode, Throwable cause, Object... args) {
         super(errorCode, cause, args);

@@ -5,9 +5,7 @@ import com.pigeon.usermanager.exception.http.UserServiceException;
 import com.pigeon.usermanager.exception.runtime.UserOnlineServiceException;
 import com.pigeon.usermanager.mapper.UserMapper;
 import com.pigeon.usermanager.model.cache.RegistrationCache;
-import com.pigeon.usermanager.model.dto.AuthorizationDto;
-import com.pigeon.usermanager.model.dto.RegistrationDto;
-import com.pigeon.usermanager.model.dto.TokenDto;
+import com.pigeon.usermanager.model.dto.*;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.model.enums.UserRole;
 import com.pigeon.usermanager.model.enums.UserStatus;
@@ -79,13 +77,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateOnlineStatus(Principal principal, boolean isOnline) {
+    public boolean updateOnlineStatus(Principal principal, boolean isOnline) {
         if (principal instanceof JwtAuthentication auth) {
             UserEntity user = this.getByLoginOrEmail(auth.getUsername());
-            userOnlineService.update(user, isOnline);
+            return userOnlineService.update(user, isOnline);
         } else {
             throw new UserOnlineServiceException(AUTH_PARSING_ERROR);
         }
+    }
+
+    @Override
+    public UserDto getByLogin(String login) {
+        UserEntity user = userRepository.findByLogin(login).orElseThrow(() -> this.createException(USER_NOT_FOUND));
+        UserOnlineDto userOnline = userOnlineService.get(user);
+        return userMapper.toDto(user, userOnline);
     }
 
     private void validationRegistration(RegistrationDto registration) {
@@ -134,7 +139,7 @@ public class UserServiceImpl implements UserService {
         return !registration.getPassword().equals(registration.getConfirmPassword());
     }
 
-    private void generateException(UserErrorCode errorCode) throws UserServiceException {
+    private void generateException(UserErrorCode errorCode) {
         throw this.createException(errorCode);
     }
 

@@ -19,7 +19,7 @@ public class UserOnlineCache {
     @Id
     private Long id;
 
-    private boolean isOnline;
+    private Boolean isOnline;
 
     private ZonedDateTime lastOnlineDate;
 }

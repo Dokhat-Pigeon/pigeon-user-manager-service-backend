@@ -35,17 +35,26 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public void update(UserEntity user, boolean isOnline) {
+    public boolean update(UserEntity user, boolean isOnline) {
         UserOnlineCache onlineCache = this.getUserOnline(user);
-        onlineCache.setOnline(isOnline);
-        onlineCache.setLastOnlineDate(ZonedDateTime.now());
-        userOnlineCacheRepository.save(onlineCache);
-        this.send(onlineCache, user.getLogin());
+        if (onlineCache.getIsOnline() != isOnline) {
+            onlineCache.setIsOnline(isOnline);
+            onlineCache.setLastOnlineDate(ZonedDateTime.now());
+            userOnlineCacheRepository.save(onlineCache);
+            this.send(onlineCache, user.getLogin());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public UserOnlineDto get(UserEntity user) {
+        return userOnlineMapper.toDto(this.getUserOnline(user));
     }
 
     private void send(UserOnlineCache onlineCache, String login) {
         UserOnlineDto dto = userOnlineMapper.toDto(onlineCache);
-        simpMessagingTemplate.convertAndSend(WsTopic.ONLINE_OTHER.getPath(login), dto);
+        simpMessagingTemplate.convertAndSend(WsTopic.USER_ONLINE.getPath(login), dto);
     }
 
     private UserOnlineCache getUserOnline(UserEntity user) {

@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public enum WsTopic {
 
-    ONLINE_SELF("/user/online/self/%s", Pattern.compile("/user/online/self/+"), true),
-    ONLINE_OTHER("/user/online/other/%s", Pattern.compile("/user/online/other/+"), false)
+    USER_ONLINE("/user/online/%s", Pattern.compile("/user/online/.+"), false)
     ;
 
     private final String path;

@@ -10,6 +10,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
+import static java.util.Objects.requireNonNull;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -19,15 +21,15 @@ public class UserOnlineListener {
 
     @EventListener
     public void userIsConnected(SessionConnectEvent event) {
-        Principal principal = event.getUser();
-        log.info("User {} is online now", principal);
-        userService.updateOnlineStatus(principal, true);
+        Principal principal = requireNonNull(event.getUser());
+        boolean isChanged = userService.updateOnlineStatus(principal, true);
+        if (isChanged) log.info("User {} is online now", principal.getName());
     }
 
     @EventListener
     public void userIsDisconnected(SessionDisconnectEvent event) {
-        Principal principal = event.getUser();
-        log.info("User {} is offline now", principal);
-        userService.updateOnlineStatus(principal, false);
+        Principal principal = requireNonNull(event.getUser());
+        boolean isChanged = userService.updateOnlineStatus(principal, false);
+        if (isChanged) log.info("User {} is offline now", principal.getName());
     }
 }
