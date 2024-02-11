@@ -1,6 +1,5 @@
 package com.pigeon.usermanager.utils;
 
-import com.pigeon.usermanager.service.impl.TokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;

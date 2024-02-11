@@ -1,6 +1,9 @@
 package com.pigeon.usermanager.service;
 
+import com.pigeon.usermanager.model.dto.UserDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -29,5 +32,5 @@ public interface BlackListService {
      * @param page Current page
      * @return {@link List<UserEntity>}
      */
-    List<UserEntity> getUsersFromBlacklist(Integer page);
+    Page<UserDto> getUsersFromBlacklist(Pageable page);
 }

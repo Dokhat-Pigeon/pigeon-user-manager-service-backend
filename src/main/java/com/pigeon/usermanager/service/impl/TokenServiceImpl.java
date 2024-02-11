@@ -60,11 +60,6 @@ public class TokenServiceImpl implements TokenService {
         return user;
     }
 
-    public UserEntity getUserFromSession() {
-        TokenDto tokens = this.getTokens();
-        return this.getUserFromRefresh(tokens.getRefresh());
-    }
-
     private UserEntity getUserFromRefresh(String refreshToken) {
         if (!tokenProvider.validateRefreshToken(refreshToken)) {
             throw this.generateException(TokenErrorCode.INVALID_REFRESH_TOKEN);

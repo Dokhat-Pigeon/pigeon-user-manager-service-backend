@@ -36,11 +36,4 @@ public interface TokenService {
      * @return {@link UserEntity}
      */
     UserEntity removeToken();
-
-    /**
-     * Get user entity from refresh token
-     *
-     * @return {@link UserEntity}
-     */
-    UserEntity getUserFromSession();
 }
