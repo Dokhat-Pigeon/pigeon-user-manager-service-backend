@@ -15,6 +15,7 @@ import java.io.File;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+
     @Schema(description = "Логин")
     private String login;
 
