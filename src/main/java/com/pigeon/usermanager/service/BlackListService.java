@@ -30,7 +30,8 @@ public interface BlackListService {
      * Delete user from blacklist
      *
      * @param page Current page
+     * @param owner Owner user
      * @return {@link List<UserEntity>}
      */
-    Page<UserDto> getUsersFromBlacklist(Pageable page);
+    Page<UserDto> getUsersFromBlacklist(UserEntity owner, Pageable page);
 }

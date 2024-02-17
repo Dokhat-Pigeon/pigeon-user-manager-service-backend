@@ -67,7 +67,7 @@ public class UserController {
             @PathVariable @Parameter(description = "Логин пользователя") @NotNull @Valid String login
     ) {
         log.info("Getting user by login: {}", login);
-        UserDto user = userService.getByLogin(login);
+        UserDto user = userService.getDtoByLogin(login);
         log.info("Returned user: {}, by login: {}", user, login);
         return ResponseEntity.ok(user);
     }

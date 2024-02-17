@@ -58,7 +58,14 @@ public interface UserService {
      * @param login User login
      * @return {@link UserDto}
      */
-    UserDto getByLogin(String login);
+    UserDto getDtoByLogin(String login);
+
+    /**
+     * Get user DTO from entity
+     * @param user User entity
+     * @return {@link UserDto}
+     */
+    UserDto getDtoByEntity(UserEntity user);
 
     /**
      * Get user entity by ID
@@ -67,4 +74,9 @@ public interface UserService {
      * @return {@link UserEntity}
      */
     UserEntity getUserById(Long id);
+
+    /**
+     * @return {@link UserEntity}
+     */
+    UserEntity getCurrentUser();
 }

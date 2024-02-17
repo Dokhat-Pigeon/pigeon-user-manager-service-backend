@@ -1,12 +1,15 @@
 package com.pigeon.usermanager.contoller;
 
 import com.pigeon.usermanager.model.dto.UserDto;
+import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.service.BlackListService;
+import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import javax.validation.constraints.Positive;
 public class BlackListController {
 
     private final BlackListService blackListService;
+    private final UserService userService;
 
     @PostMapping("/{id}")
     @Operation(description = "Добавить пользователя в черный список")
@@ -43,13 +47,19 @@ public class BlackListController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{pageable}")
+    @GetMapping
     @Operation(description = "Получение постранично (пагинация) пользователей из черного списка текущего пользователя в сессии")
     public ResponseEntity<Page<UserDto>> get(
-            @PathVariable @Positive @Parameter(description = "Страница") Pageable pageable
+            @ParameterObject @Parameter(description = "Страница") Pageable pageable
     ) {
-        Page<UserDto> users = blackListService.getUsersFromBlacklist(pageable);
-//        log.info("Returned blacklist item count: {}, for user: {}, by pageable: {}")
+        UserEntity owner = userService.getCurrentUser();
+        Page<UserDto> users = blackListService.getUsersFromBlacklist(owner, pageable);
+        log.info(
+                "Returned blacklist item count: {}, for user: {}, request: {}",
+                users.stream().count(),
+                owner.getLogin(),
+                pageable
+        );
         return ResponseEntity.ok(users);
     }
 }

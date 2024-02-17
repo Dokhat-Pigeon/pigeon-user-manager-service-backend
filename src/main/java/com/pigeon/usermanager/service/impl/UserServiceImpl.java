@@ -89,23 +89,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getByLogin(String login) {
+    public UserDto getDtoByLogin(String login) {
         UserEntity user = userRepository.findByLogin(login).orElseThrow(() -> this.createException(USER_NOT_FOUND));
-        UserOnlineDto userOnline = userOnlineService.get(user);
-        return userMapper.toDto(user, userOnline);
-
+        return this.getDtoByEntity(user);
     }
 
+    @Override
+    public UserDto getDtoByEntity(UserEntity user) {
+        UserOnlineDto userOnline = userOnlineService.get(user);
+        return userMapper.toDto(user, userOnline);
+    }
+
+    @Override
     public UserEntity getUserById(Long id) {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
     }
 
-    public UserEntity getUserFromSession() {
+    @Override
+    public UserEntity getCurrentUser() {
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
 
-        return UserEntity.builder().build();
+        return this.getByLoginOrEmail((String) user.getPrincipal());
     }
 
     private void validationRegistration(RegistrationDto registration) {
