@@ -1,11 +1,14 @@
 package com.pigeon.usermanager.contoller;
 
+import com.pigeon.usermanager.model.dto.UserDto;
 import com.pigeon.usermanager.service.BlackListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +41,15 @@ public class BlackListController {
     ) {
         blackListService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{pageable}")
+    @Operation(description = "Получение постранично (пагинация) пользователей из черного списка текущего пользователя в сессии")
+    public ResponseEntity<Page<UserDto>> get(
+            @PathVariable @Positive @Parameter(description = "Страница") Pageable pageable
+    ) {
+        Page<UserDto> users = blackListService.getUsersFromBlacklist(pageable);
+//        log.info("Returned blacklist item count: {}, for user: {}, by pageable: {}")
+        return ResponseEntity.ok(users);
     }
 }

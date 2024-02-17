@@ -9,27 +9,24 @@ import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.repository.UserRepository;
 import com.pigeon.usermanager.security.JwtProvider;
 import com.pigeon.usermanager.service.TokenService;
+import com.pigeon.usermanager.utils.SessionProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
-    private final String TOKEN_KEY = "token";
+    public static final String TOKEN_KEY = "token";
 
     private final JwtProvider tokenProvider;
     private final UserRepository userRepository;
+    private final SessionProvider sessionProvider;
 
     @Override
     public TokenDto getTokens() {
-        Object tokens = this.getSession().getAttribute(TOKEN_KEY);
+        Object tokens = this.sessionProvider.getSession().getAttribute(TOKEN_KEY);
 
         if (tokens == null) throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
         else return (TokenDto) tokens;
@@ -41,7 +38,7 @@ public class TokenServiceImpl implements TokenService {
         UserEntity user = this.getUserFromRefresh(tokens.getRefresh());
         tokens.setAuthorization(tokenProvider.generateAccessToken(user));
 
-        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        this.sessionProvider.getSession().setAttribute(TOKEN_KEY, tokens);
         return tokens;
     }
 
@@ -51,7 +48,7 @@ public class TokenServiceImpl implements TokenService {
                 .authorization(tokenProvider.generateAccessToken(user))
                 .refresh(tokenProvider.generateRefreshToken(user))
                 .build();
-        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        this.sessionProvider.getSession().setAttribute(TOKEN_KEY, tokens);
         return tokens;
     }
 
@@ -59,7 +56,7 @@ public class TokenServiceImpl implements TokenService {
     public UserEntity removeToken() {
         TokenDto token = this.getTokens();
         UserEntity user = this.getUserFromRefresh(token.getRefresh());
-        this.getSession().removeAttribute(TOKEN_KEY);
+        this.sessionProvider.getSession().removeAttribute(TOKEN_KEY);
         return user;
     }
 
@@ -71,12 +68,6 @@ public class TokenServiceImpl implements TokenService {
         String login = claims.getSubject();
         return userRepository.findByLogin(login)
                 .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND));
-    }
-
-    private HttpSession getSession() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        return ((ServletRequestAttributes) attributes).getRequest().getSession();
     }
 
     private TokenServiceException generateException(TokenErrorCode errorCode) {

@@ -19,6 +19,8 @@ import com.pigeon.usermanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +93,19 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByLogin(login).orElseThrow(() -> this.createException(USER_NOT_FOUND));
         UserOnlineDto userOnline = userOnlineService.get(user);
         return userMapper.toDto(user, userOnline);
+
+    }
+
+    public UserEntity getUserById(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
+    }
+
+    public UserEntity getUserFromSession() {
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+
+        return UserEntity.builder().build();
     }
 
     private void validationRegistration(RegistrationDto registration) {
