@@ -57,7 +57,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
 
     private ChangePasswordCache prepareChangePassword(String email) {
         return userRepository.findByEmail(email)
-                .map(this::createdChangePassword)
+                .map(this::createChangePassword)
                 .orElseThrow(() -> this.generateException(WRONG_EMAIL_ADDRESS, email));
     }
 
@@ -69,7 +69,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
         throw this.generateException(error, args);
     }
 
-    private ChangePasswordCache createdChangePassword(UserEntity user) {
+    private ChangePasswordCache createChangePassword(UserEntity user) {
         return ChangePasswordCache.builder()
                 .recordId(UUID.randomUUID())
                 .userId(user.getId())
@@ -83,6 +83,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
         UserEntity user = userRepository.findById(cache.getUserId())
                 .orElseThrow(() -> this.generateException(CHANGE_PASSWORD_ERROR));
         user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+        user.setState(UUID.randomUUID());
         changePasswordRepository.deleteById(cache.getRecordId());
     }
 }

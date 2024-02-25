@@ -7,6 +7,7 @@ import com.pigeon.usermanager.exception.enums.http.UserErrorCode;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.repository.UserRepository;
+import com.pigeon.usermanager.security.ClaimsConstants;
 import com.pigeon.usermanager.security.JwtProvider;
 import com.pigeon.usermanager.service.TokenService;
 import com.pigeon.usermanager.utils.SessionProvider;
@@ -66,8 +67,12 @@ public class TokenServiceImpl implements TokenService {
         }
         Claims claims = tokenProvider.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
-        return userRepository.findByLogin(login)
+        UserEntity user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND));
+        if (!claims.get(ClaimsConstants.STATE_KEY).equals(user.getState())) {
+            throw this.generateException(TokenErrorCode.USER_STATE_CHANGED);
+        }
+        return user;
     }
 
     private TokenServiceException generateException(TokenErrorCode errorCode) {

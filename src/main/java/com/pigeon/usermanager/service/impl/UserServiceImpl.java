@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserService {
 
     private UserEntity createUserEntity(RegistrationCache registration) {
         return userMapper.toEntity(registration).toBuilder()
+                .state(UUID.randomUUID())
                 .role(UserRole.USER)
                 .build();
     }

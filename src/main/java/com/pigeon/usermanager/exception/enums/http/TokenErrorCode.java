@@ -11,6 +11,7 @@ public enum TokenErrorCode implements HttpErrorCode {
 
     INVALID_REFRESH_TOKEN("Невалидный Refresh токен", HttpStatus.FORBIDDEN),
     TOKEN_NOT_FOUND("Отсутствует токен авторизации", HttpStatus.NOT_FOUND),
+    USER_STATE_CHANGED("Состояние пользователя изменилось", HttpStatus.FORBIDDEN)
     ;
 
     private final String messageTemplate;
