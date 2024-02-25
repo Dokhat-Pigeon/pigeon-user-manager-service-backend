@@ -1,9 +1,7 @@
 package com.pigeon.usermanager.contoller;
 
 import com.pigeon.usermanager.model.dto.UserDto;
-import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.service.BlackListService;
-import com.pigeon.usermanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +25,6 @@ import javax.validation.constraints.Positive;
 public class BlackListController {
 
     private final BlackListService blackListService;
-    private final UserService userService;
 
     @PostMapping("/{id}")
     @Operation(description = "Добавить пользователя в черный список")
@@ -48,18 +45,11 @@ public class BlackListController {
     }
 
     @GetMapping
-    @Operation(description = "Получение постранично (пагинация) пользователей из черного списка текущего пользователя в сессии")
+    @Operation(description = "Получение постранично пользователей из черного списка текущего пользователя в сессии")
     public ResponseEntity<Page<UserDto>> get(
             @ParameterObject @Parameter(description = "Страница") Pageable pageable
     ) {
-        UserEntity owner = userService.getCurrentUser();
-        Page<UserDto> users = blackListService.getUsersFromBlacklist(owner, pageable);
-        log.info(
-                "Returned blacklist item count: {}, for user: {}, request: {}",
-                users.stream().count(),
-                owner.getLogin(),
-                pageable
-        );
+        Page<UserDto> users = blackListService.getUsersFromBlacklist(pageable);
         return ResponseEntity.ok(users);
     }
 }

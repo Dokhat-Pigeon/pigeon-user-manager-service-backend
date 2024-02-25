@@ -26,7 +26,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDto getTokens() {
-        Object tokens = this.sessionProvider.getSession().getAttribute(TOKEN_KEY);
+        Object tokens = sessionProvider.getSession().getAttribute(TOKEN_KEY);
 
         if (tokens == null) throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
         else return (TokenDto) tokens;

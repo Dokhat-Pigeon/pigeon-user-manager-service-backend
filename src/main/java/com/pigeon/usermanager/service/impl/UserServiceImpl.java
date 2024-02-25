@@ -102,15 +102,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserById(Long id) {
-        return userRepository
-                .findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
     }
 
     @Override
     public UserEntity getCurrentUser() {
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
-
         return this.getByLoginOrEmail((String) user.getPrincipal());
     }
 

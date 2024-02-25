@@ -17,6 +17,7 @@ public enum UserErrorCode implements HttpErrorCode {
     LOGIN_ALREADY_USE("Логин уже используется", HttpStatus.BAD_REQUEST),
     WRONG_VERIFICATION_URL("Неверный URL верификации почты", HttpStatus.NOT_FOUND),
     USER_NOT_FOUND("Пользователя не существует или он был удален", HttpStatus.NOT_FOUND),
+    USER_IN_BLACKLIST_ALREADY_EXIST("Пользователь уже находится в черном списке", HttpStatus.BAD_REQUEST),
     ;
 
     private final String messageTemplate;
