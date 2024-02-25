@@ -50,7 +50,7 @@ public class BlackListServiceImpl implements BlackListService {
                 .map(BlacklistEntity::getUser)
                 .map(userService::getDtoByEntity);
         log.info("Returned blacklist item count: {}, for user: {}, request: {}",
-                users.stream().count(), owner.getLogin(), pageable);
+                users.getTotalElements(), owner.getLogin(), pageable);
         return users;
     }
 }
