@@ -72,7 +72,8 @@ public class EmailServiceImpl implements EmailService {
 
         VERIFICATION("Pigeon Регистрация", "VerificationEmail.html"),
         CHANGE_PASSWORD("Pigeon Смена пароля", "ChangePasswordEmail.html"),
-        COMPLETE_CHANGE_PASSWORD("Pigeon Успешная смена пароля", "CompleteChangePasswordEmail.html");
+        COMPLETE_CHANGE_PASSWORD("Pigeon Успешная смена пароля", "CompleteChangePasswordEmail.html"),
+        ;
 
         private final String subject;
         private final String templateLocation;

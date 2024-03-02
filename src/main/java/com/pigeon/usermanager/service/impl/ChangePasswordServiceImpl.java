@@ -60,11 +60,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
     }
 
     private ChangePasswordCache prepareChangePassword(String email) {
-        try {
-            return this.createChangePassword(userService.getByLoginOrEmail(email));
-        } catch (UserServiceException e) {
-            throw this.generateException(WRONG_EMAIL_ADDRESS, email);
-        }
+        return this.createChangePassword(userService.getByLoginOrEmail(email));
     }
 
     private ChangePasswordException generateException(ChangePasswordError error, Object... args) {
