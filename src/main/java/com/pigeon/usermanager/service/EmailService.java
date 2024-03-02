@@ -17,4 +17,11 @@ public interface EmailService {
      * @param changePassword {@link UserCache} Change password information
      */
     void sendChangePassword(ChangePasswordCache changePassword);
+
+    /**
+     *  Sending letter confirming successful password change
+     * @param email User email
+     * @param userName User Name
+     */
+    void sendCompleteChangePassword(String email, String userName);
 }

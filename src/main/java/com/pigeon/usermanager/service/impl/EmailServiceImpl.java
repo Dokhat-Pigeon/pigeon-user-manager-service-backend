@@ -31,27 +31,38 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendVerification(RegistrationCache registration) {
         String url = verificationUrl + "/" + registration.getRecordId();
-        emailSender.sendMail(this.createContext(registration.getEmail(), registration.getName(),
-                url, Event.VERIFICATION));
+        Map<String, Object> context = Map.of(
+                EmailConstraints.USERNAME.getLabel(), registration.getName(),
+                EmailConstraints.VERIFICATION_URL.getLabel(), url
+        );
+        emailSender.sendMail(this.createContext(registration.getEmail(), Event.VERIFICATION, context));
     }
 
     @Override
     public void sendChangePassword(ChangePasswordCache changePassword) {
         String url = confirmationUrl + "/" + changePassword.getRecordId();
-        emailSender.sendMail(this.createContext(changePassword.getUserEmail(), changePassword.getUserName(),
-                url, Event.CHANGE_PASSWORD));
+        Map<String, Object> context = Map.of(
+                EmailConstraints.USERNAME.getLabel(), changePassword.getUserName(),
+                EmailConstraints.VERIFICATION_URL.getLabel(), url
+        );
+        emailSender.sendMail(this.createContext(changePassword.getUserEmail(), Event.CHANGE_PASSWORD, context));
     }
 
-    private EmailContext createContext(String email, String userName, String url, Event event) {
+    @Override
+    public void sendCompleteChangePassword(String email, String userName) {
+        Map<String, Object> context = Map.of(
+                EmailConstraints.USERNAME.getLabel(), userName
+        );
+        emailSender.sendMail(this.createContext(email, Event.COMPLETE_CHANGE_PASSWORD, context));
+    }
+
+    private EmailContext createContext(String email, Event event, Map<String, Object> contextVariables) {
         return EmailContext.builder()
                 .from(serviceEmail)
                 .to(email)
                 .subject(event.getSubject())
                 .templateLocation(event.getTemplateLocation())
-                .context(Map.of(
-                        EmailConstraints.USERNAME.getLabel(), userName,
-                        EmailConstraints.VERIFICATION_URL.getLabel(), url
-                ))
+                .context(contextVariables)
                 .build();
     }
 
@@ -60,7 +71,9 @@ public class EmailServiceImpl implements EmailService {
     private enum Event {
 
         VERIFICATION("Pigeon Регистрация", "VerificationEmail.html"),
-        CHANGE_PASSWORD("Pigeon Смена пароля", "ChangePasswordEmail.html");
+        CHANGE_PASSWORD("Pigeon Смена пароля", "ChangePasswordEmail.html"),
+        COMPLETE_CHANGE_PASSWORD("Pigeon Успешная смена пароля", "CompleteChangePasswordEmail.html"),
+        ;
 
         private final String subject;
         private final String templateLocation;

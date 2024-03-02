@@ -112,6 +112,12 @@ public class UserServiceImpl implements UserService {
         return this.getByLoginOrEmail((String) user.getPrincipal());
     }
 
+    @Override
+    public UserEntity getByLoginOrEmail(String loginOrEmail) {
+        return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
+                .orElseThrow(() -> this.createException(WRONG_EMAIL_OR_LOGIN));
+    }
+
     private void validationRegistration(RegistrationDto registration) {
         UserErrorCode errorCode = null;
         if (!EmailValidator.getInstance().isValid(registration.getEmail())) errorCode = WRONG_EMAIL_ADDRESS;
@@ -148,11 +154,6 @@ public class UserServiceImpl implements UserService {
                 .state(UUID.randomUUID())
                 .role(UserRole.USER)
                 .build();
-    }
-
-    private UserEntity getByLoginOrEmail(String loginOrEmail) {
-        return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
-                .orElseThrow(() -> this.createException(WRONG_EMAIL_OR_LOGIN));
     }
 
     private boolean checkConfirmPassword(RegistrationDto registration) {
