@@ -79,4 +79,12 @@ public interface UserService {
      * @return {@link UserEntity}
      */
     UserEntity getCurrentUser();
+
+    /**
+     * Get user entity by Login or Email
+     *
+     * @param loginOrEmail User Login or Email
+     * @return {@link UserEntity}
+     */
+    UserEntity getByLoginOrEmail(String loginOrEmail);
 }
