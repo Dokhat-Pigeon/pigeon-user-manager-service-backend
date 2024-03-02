@@ -2,15 +2,16 @@
 
 --changeset dmitry.krivenko:202311051800-1
 CREATE TABLE IF NOT EXISTS public.user(
-    id              BIGINT          NOT NULL,
-    name            VARCHAR         NOT NULL,
-    email           VARCHAR         NOT NULL,
-    login           VARCHAR         NOT NULL,
-    password        VARCHAR         NOT NULL,
-    image_name      VARCHAR,
-    status          VARCHAR         NOT NULL,
-    role            VARCHAR         NOT NULL,
-    created_date    TIMESTAMPTZ     NOT NULL        DEFAULT now()::TIMESTAMPTZ,
+    id               BIGINT          NOT NULL,
+    state            UUID            NOT NULL,
+    name             VARCHAR         NOT NULL,
+    email            VARCHAR         NOT NULL,
+    login            VARCHAR         NOT NULL,
+    password         VARCHAR         NOT NULL,
+    image_name       VARCHAR,
+    status           VARCHAR         NOT NULL,
+    role             VARCHAR         NOT NULL,
+    created_date     TIMESTAMPTZ     NOT NULL        DEFAULT now()::TIMESTAMPTZ,
 
     CONSTRAINT user_id              PRIMARY KEY (id),
     CONSTRAINT user_unique_email    UNIQUE      (email),

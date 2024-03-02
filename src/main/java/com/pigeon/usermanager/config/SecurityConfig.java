@@ -1,8 +1,8 @@
 package com.pigeon.usermanager.config;
 
-import com.pigeon.usermanager.model.enums.UserRole;
 import com.pigeon.usermanager.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,33 +22,26 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    private final String[] AUTH_PATHS = {
-            "/v1/user/logout",
-            "/v1/blacklist/**"
-    };
-
-    private final String[] WHITE_LIST = {
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/v1/token",
-            "/v1/change-password/**",
-            "/v1/user/verification/**",
-            "/v1/user/registration",
-            "/v1/user/authorization"
-    };
+    @Value("#{'${api.rest.white-list}'.split(', ')}")
+    private String[] whiteApiList;
+    @Value("#{'${api.rest.user-list}'.split(', ')}")
+    private String[] userApiList;
+    @Value("#{('${auth.roles.admin}' + ', ' + '${auth.roles.user}').split(', ')}")
+    private String[] userRoles;
+    @Value("#{'${auth.roles.admin}'.split(', ')}")
+    private String[] adminRoles;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors().and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_PATHS).hasAnyRole(UserRole.USER.name())
-                .antMatchers(WHITE_LIST).permitAll()
-                .anyRequest().hasAnyRole(UserRole.ADMINISTRATOR.name())
+                .antMatchers(whiteApiList).permitAll()
+                .antMatchers(userApiList).hasAnyRole(userRoles)
+                .anyRequest().hasAnyRole(adminRoles)
                 .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -1,22 +1,17 @@
 package com.pigeon.usermanager.service.impl;
 
-import com.pigeon.usermanager.exception.TokenServiceException;
-import com.pigeon.usermanager.exception.UserServiceException;
-import com.pigeon.usermanager.exception.enums.TokenErrorCode;
-import com.pigeon.usermanager.exception.enums.UserErrorCode;
+import com.pigeon.usermanager.exception.http.TokenServiceException;
+import com.pigeon.usermanager.exception.enums.http.TokenErrorCode;
 import com.pigeon.usermanager.model.dto.TokenDto;
 import com.pigeon.usermanager.model.entity.UserEntity;
 import com.pigeon.usermanager.repository.UserRepository;
+import com.pigeon.usermanager.security.ClaimsConstants;
 import com.pigeon.usermanager.security.JwtProvider;
 import com.pigeon.usermanager.service.TokenService;
+import com.pigeon.usermanager.utils.SessionProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +21,11 @@ public class TokenServiceImpl implements TokenService {
 
     private final JwtProvider tokenProvider;
     private final UserRepository userRepository;
+    private final SessionProvider sessionProvider;
 
     @Override
     public TokenDto getTokens() {
-        Object tokens = this.getSession().getAttribute(TOKEN_KEY);
+        Object tokens = sessionProvider.getSession().getAttribute(TOKEN_KEY);
 
         if (tokens == null) throw this.generateException(TokenErrorCode.TOKEN_NOT_FOUND);
         else return (TokenDto) tokens;
@@ -41,7 +37,7 @@ public class TokenServiceImpl implements TokenService {
         UserEntity user = this.getUserFromRefresh(tokens.getRefresh());
         tokens.setAuthorization(tokenProvider.generateAccessToken(user));
 
-        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        this.sessionProvider.getSession().setAttribute(TOKEN_KEY, tokens);
         return tokens;
     }
 
@@ -51,7 +47,7 @@ public class TokenServiceImpl implements TokenService {
                 .authorization(tokenProvider.generateAccessToken(user))
                 .refresh(tokenProvider.generateRefreshToken(user))
                 .build();
-        this.getSession().setAttribute(TOKEN_KEY, tokens);
+        this.sessionProvider.getSession().setAttribute(TOKEN_KEY, tokens);
         return tokens;
     }
 
@@ -59,7 +55,7 @@ public class TokenServiceImpl implements TokenService {
     public UserEntity removeToken() {
         TokenDto token = this.getTokens();
         UserEntity user = this.getUserFromRefresh(token.getRefresh());
-        this.getSession().removeAttribute(TOKEN_KEY);
+        this.sessionProvider.getSession().removeAttribute(TOKEN_KEY);
         return user;
     }
 
@@ -69,17 +65,15 @@ public class TokenServiceImpl implements TokenService {
         }
         Claims claims = tokenProvider.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
-        return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserServiceException(UserErrorCode.USER_NOT_FOUND, new Exception()));
-    }
-
-    private HttpSession getSession() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        return ((ServletRequestAttributes) attributes).getRequest().getSession();
+        UserEntity user = userRepository.findByLogin(login)
+                .orElseThrow(() -> this.generateException(TokenErrorCode.USER_NOT_AVAILABLE));
+        if (!claims.get(ClaimsConstants.STATE_KEY).equals(user.getState())) {
+            throw this.generateException(TokenErrorCode.USER_STATE_CHANGED);
+        }
+        return user;
     }
 
     private TokenServiceException generateException(TokenErrorCode errorCode) {
-        return new TokenServiceException(errorCode, new Exception());
+        return new TokenServiceException(errorCode);
     }
 }

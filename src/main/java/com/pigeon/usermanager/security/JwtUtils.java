@@ -4,6 +4,8 @@ import com.pigeon.usermanager.model.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
+
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,6 +25,10 @@ public final class JwtUtils {
         jwtInfoToken.setFirstName("anonymous");
         jwtInfoToken.setUsername("anonymous");
         return jwtInfoToken;
+    }
+
+    public static boolean isAnonymous(Authentication authentication) {
+        return authentication.getAuthorities().contains(UserRole.ANONYMOUS);
     }
 
     private static Set<UserRole> getRoles(Claims claims) {

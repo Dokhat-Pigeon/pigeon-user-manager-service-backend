@@ -59,6 +59,7 @@ public class JwtProvider {
                 .setSubject(user.getLogin())
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
+                .claim(ClaimsConstants.STATE_KEY, user.getState())
                 .compact();
     }
 

@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 /**
  * Модель аккаунта пользователя
@@ -29,6 +30,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_user_sequence")
     @SequenceGenerator(name = "hibernate_user_sequence", allocationSize = 1)
     private Long id;
+
+    /**
+     * Индентификатор состояния пользоватяля
+     */
+    private UUID state;
 
     /**
      * Почта пользователя
@@ -57,7 +63,7 @@ public class UserEntity {
     private String imageName;
 
     /**
-     * Наименование файла изображения для аватарки пользователя
+     * Статус пользователя в системе
      */
     @Enumerated(EnumType.STRING)
     private UserStatus status;

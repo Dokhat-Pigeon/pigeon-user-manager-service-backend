@@ -1,6 +1,5 @@
 package com.pigeon.usermanager.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +33,5 @@ public class RegistrationDto {
 
     @NotBlank
     @Schema(description = "Подтверждение пароля")
-    @JsonProperty("confirm_password")
     private String confirmPassword;
 }
